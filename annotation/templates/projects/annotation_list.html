@@ -1,0 +1,9 @@
+<h1>Annotation</h1>
+<ul>
+  {% for annotation in annotations %}
+    <li>
+      <a href="{% url 'annotation:annotation_detail' annotation.pk %}">{{ annotation.label }}</a>
+    </li>
+  {% endfor %}
+</ul>
+<a href="{% url 'annotation:annotation_create' %}">+ New Annotation</a>

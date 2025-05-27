@@ -1,0 +1,6 @@
+<h1>{{ annotation.label }}</h1>
+<p>{{ annotation.description }}</p>
+<p>Created by: {{ annotation.created_by }}</p>
+<a href="{% url 'annotation:annotation_update' annotation.pk %}">Edit</a> |
+<a href="{% url 'annotation:annotation_delete' annotation.pk %}">Delete</a> |
+<a href="{% url 'annotation:annotation_list' %}">Back</a>

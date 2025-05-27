@@ -1,0 +1,7 @@
+<h1>Delete Annotation</h1>
+<p>Are you sure you want to delete "{{ annotation.label }}"?</p>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit">Yes, delete</button>
+</form>
+<a href="{% url 'annotation:annotation_detail' annotation.pk %}">Cancel</a>
