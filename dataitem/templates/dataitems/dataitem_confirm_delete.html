@@ -1,0 +1,7 @@
+<h1>Delete Dataitem</h1>
+<p>Are you sure you want to delete "{{ dataitem.name }}"?</p>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit">Yes, delete</button>
+</form>
+<a href="{% url 'dataitems:dataitem_detail' dataitem.pk %}">Cancel</a>

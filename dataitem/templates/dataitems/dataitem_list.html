@@ -1,0 +1,9 @@
+<h1>Dataitems</h1>
+<ul>
+  {% for dataitem in dataitems %}
+    <li>
+      <a href="{% url 'dataitems:dataitem_detail' dataitem.pk %}">{{ dataitem.name }}</a>
+    </li>
+  {% endfor %}
+</ul>
+<a href="{% url 'dataitems:dataitem_create' %}">+ New Dataitem</a>
