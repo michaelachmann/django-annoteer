@@ -14,6 +14,8 @@ class Annotation(models.Model):
     status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=1)
     finished_annotations = forms.ChoiceField(choices=("Ja", "Nein"))
     annotated_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    label = models.ForeignKey(Dataitem, on_delete=models.CASCADE)
+    description = models.TextField(blank=True)
     save_finished_annotation = models.BooleanField(default=False)
     dataitem = models.ForeignKey(Dataitem, on_delete=models.CASCADE)
     last_modified_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='last_modifiede_by')
