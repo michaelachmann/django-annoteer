@@ -1,6 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}Anoteer | Dataitem{% endblock %}
+{% block content %}
 <h1>{{ dataitem.name }}</h1>
 <p>{{ dataitem.description }}</p>
 <p>Created by: {{ dataitem.created_by }}</p>
 <a href="{% url 'dataitems:dataitem_update' dataitem.pk %}">Edit</a> |
 <a href="{% url 'dataitems:dataitem_delete' dataitem.pk %}">Delete</a> |
 <a href="{% url 'dataitems:dataitem_list' %}">Back</a>
+{% endblock %}

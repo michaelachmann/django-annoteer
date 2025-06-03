@@ -1,3 +1,7 @@
+{% extends 'base.html' %}
+
+{% block title %}Anoteer | Data Overview{% endblock %}
+{% block content %}
 <h1>Dataitems</h1>
 <ul>
   {% for dataitem in dataitems %}
@@ -7,3 +11,4 @@
   {% endfor %}
 </ul>
 <a href="{% url 'dataitems:dataitem_create' %}">+ New Dataitem</a>
+{% endblock %}
