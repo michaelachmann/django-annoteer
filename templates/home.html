@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+  Anoteer | Home
+{% endblock %}
+
+{% block content %}
+  <!-- Hero Section (jumbotron style) -->
+  <div class="py-5 bg-light rounded-3 mb-5" id="jumbotron-home">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-7">
+          <h1 class="display-4 fw-bold">Welcome to Anoteer</h1>
+          <p class="lead mb-4">
+            Your one‐stop app to manage projects, upload data items (texts or images), and annotate them with ease.
+          </p>
+          <a href="{% url 'projects:project_list' %}" class="btn btn-primary btn-lg me-2">
+            <i class="bi bi-folder2-open me-1"></i> View Projects
+          </a>
+          <a href="{% url 'projects:project_create' %}" class="btn btn-outline-primary btn-lg">
+            <i class="bi bi-plus-lg me-1"></i> Create New Project
+          </a>
+        </div>
+        <div class="col-md-5 text-center">
+          <img src="{% static 'images/logo.png' %}" alt="Logo" class="img-fluid rounded" id="home-logo">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <div class="container mb-5">
+    <div class="row text-center">
+      <div class="col-lg-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <div class="mb-3">
+              <i class="bi bi-folder-plus display-6 text-primary"></i>
+            </div>
+            <h5 class="card-title">Create Projects</h5>
+            <p class="card-text text-muted">
+              Start by organizing your work into projects. Each project can group together a set of related items for annotation.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <div class="mb-3">
+              <i class="bi bi-file-earmark-text display-6 text-success"></i>
+            </div>
+            <h5 class="card-title">Manage Data Items</h5>
+            <p class="card-text text-muted">
+              Upload or create text and image files as “Data Items.” Each item belongs to a project and will be listed for annotation.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <div class="mb-3">
+              <i class="bi bi-check2-square display-6 text-warning"></i>
+            </div>
+            <h5 class="card-title">Annotate Easily</h5>
+            <p class="card-text text-muted">
+              For each Data Item, use a simple form for annotations. Save and export your results seamlessly.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Future Vision Section -->
+  <div class="container mb-5">
+    <div class="p-4 bg-white rounded-3 shadow-sm">
+      <h4 class="fw-semibold">What Anoteer Will Do One Day</h4>
+      <p class="mb-3 text-muted">
+        Today, Anoteer helps you organize projects, upload text/image items, and annotate them with checkboxes. In the near future, we plan to add:
+      </p>
+      <ul class="list-unstyled mb-0">
+        <li class="mb-2">
+          <i class="bi bi-people-fill me-2 text-secondary"></i>
+          <strong>Collaborative Annotation:</strong> Invite teammates to work on the same project simultaneously, with role‐based permissions.
+        </li>
+        <li class="mb-2">
+          <i class="bi bi-bar-chart-line-fill me-2 text-secondary"></i>
+          <strong>Analytics Dashboard:</strong> Generate charts and summaries of your annotation metrics (e.g., counts, agreement rates).
+        </li>
+        <li>
+          <i class="bi bi-filetype-csv me-2 text-secondary"></i>
+          <strong>Export & Integration:</strong> Export annotations as CSV/JSON, or integrate directly with other tools (e.g., machine learning pipelines).
+        </li>
+      </ul>
+    </div>
+  </div>
+{% endblock %}

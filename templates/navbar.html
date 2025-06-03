@@ -1,0 +1,9 @@
+<header class="p-3 mb-3 border-bottom">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-between">
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <li><a href="{% url 'home' %}" class="nav-link px-2 {% if request.resolver_match.url_name == 'home' %}link-secondary{% else %}link-body-emphasis{% endif %}">Home</a></li>
+                <li><a href="{% url 'projects:project_list' %}" class="nav-link px-2 {% if request.resolver_match.url_name == 'prompt_list' %}link-secondary{% else %}link-body-emphasis{% endif %}">Projects</a></li>
+            </ul>
+    </div>
+</header>
