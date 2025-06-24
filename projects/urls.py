@@ -5,6 +5,7 @@ from .views import (
     project_create,
     project_update,
     project_delete,
+    project_instructions,
 )
 
 app_name = "projects"
@@ -15,4 +16,5 @@ urlpatterns = [
     path("create/", project_create, name="project_create"),
     path("<int:pk>/update/", project_update, name="project_update"),
     path("<int:pk>/delete/", project_delete, name="project_delete"),
+    path("<int:pk>/instructions/", project_instructions, name="project_instructions"),
 ]
