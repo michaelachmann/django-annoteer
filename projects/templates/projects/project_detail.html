@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load markdownify %}
 
 {% block title %}
   Anotgizeer | {{ project.name }}
@@ -11,13 +12,6 @@
       <!-- ── Project Header  ────────────────────────────────── -->
       <div class="mb-4">
         <h1 class="fw-bold">{{ project.name }}</h1>
-
-        {% if project.description %}
-          <p class="lead">{{ project.description }}</p>
-        {% else %}
-          <p class="text-muted fst-italic">No description provided for this project.</p>
-        {% endif %}
-
         <p class="text-secondary small mb-0">
           Created by <strong>{{ project.created_by }}</strong>
           on {{ project.created_at|date:"M d, Y" }}
@@ -52,6 +46,75 @@
           <i class="bi bi-plus-lg"></i> New Data Item
         </a>
       </div>
+<!-- ── Project Details Table ────────────────────────────────────────────── -->
+<div class="mb-4">
+  <h3 class="h5">Projektdetails</h3>
+  <table class="table table-bordered">
+    <tbody>
+      <tr>
+        <th scope="row" style="width: 30%">Name</th>
+        <td>{{ project.name }}</td>
+      </tr>
+
+      <tr>
+        <th scope="row">Beschreibung</th>
+        <td>
+          {% if project.description %}
+            <div class="markdown-body">
+              {{ project.description|markdownify }}
+            </div>
+          {% else %}
+            <span class="text-muted fst-italic">Keine Beschreibung angegeben.</span>
+          {% endif %}
+        </td>
+      </tr>
+
+      <tr>
+        <th scope="row">Anleitung</th>
+        <td>
+          {% if project.instructions %}
+            <div class="markdown-body">
+              {{ project.instructions|markdownify }}
+            </div>
+          {% else %}
+            <span class="text-muted fst-italic">Keine Anleitung vorhanden.</span>
+          {% endif %}
+        </td>
+      </tr>
+
+      <tr>
+        <th scope="row">Label-Typ</th>
+        <td>{{ project.get_label_type_display }}</td>
+      </tr>
+
+      <tr>
+        <th scope="row">Benötigte Annotator*innen</th>
+        <td>{{ project.num_annotators }}</td>
+      </tr>
+
+      <tr>
+        <th scope="row">Labels</th>
+        <td>
+          {% with labels=project.label_set.all %}
+            {% if labels %}
+              <ul class="mb-0">
+                {% for label in labels %}
+                  <li><code>{{ label.label }}</code> – <small>{{ label.value }}</small></li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <span class="text-muted fst-italic">Keine Labels vorhanden.</span>
+            {% endif %}
+          {% endwith %}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <a href="{% url 'projects:import_csv' project.pk %}" class="btn btn-outline-primary mt-2">
+    <i class="bi bi-upload"></i> Texte importieren
+  </a>
+</div>
 
       <!-- ── Divider ────────────────────────────────────────────────────────────── -->
       <hr>

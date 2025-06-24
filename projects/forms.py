@@ -1,12 +1,16 @@
 from django import forms
 from .models import Project
 
-
-# projects/forms.py
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
-        fields = ["name", "description"]
+        fields = [
+            "name",
+            "description",
+            "instructions",
+            "label_type",
+            "num_annotators",
+        ]
         widgets = {
             "name": forms.TextInput(attrs={
                 "class": "form-control",
@@ -14,7 +18,17 @@ class ProjectForm(forms.ModelForm):
             }),
             "description": forms.Textarea(attrs={
                 "class": "form-control",
-                "rows": 4,
-                "placeholder": "Enter a short description (optional)"
+                "rows": 3,
+                "placeholder": "Short description (Markdown supported)"
+            }),
+            "instructions": forms.Textarea(attrs={
+                "class": "form-control",
+                "rows": 5,
+                "placeholder": "Detailed instructions (Markdown supported)"
+            }),
+            "label_type": forms.RadioSelect(),
+            "num_annotators": forms.NumberInput(attrs={
+                "class": "form-control",
+                "min": 1
             }),
         }

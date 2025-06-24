@@ -1,7 +1,9 @@
 # projects/views.py
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
+
 from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponse
 
 from dataitem.models import Dataitem
 from .models import Project
@@ -21,8 +23,6 @@ def project_detail(request, pk):
         "dataitems": dataitems,
     })
 
-
-
 @login_required
 def project_create(request):
     if request.method == "POST":
@@ -31,7 +31,8 @@ def project_create(request):
             project = form.save(commit=False)
             project.created_by = request.user
             project.save()
-            return redirect("projects:project_list")
+            # redirect to label management for this project
+            return redirect("projects:label_management", project.pk)
     else:
         form = ProjectForm()
     return render(request, "projects/project_form.html", {"form": form})
@@ -43,7 +44,7 @@ def project_update(request, pk):
     form = ProjectForm(request.POST or None, instance=project)
     if form.is_valid():
         form.save()
-        return redirect("projects:project_list")
+        return redirect("projects:label_management", project.pk)
     return render(request, "projects/project_form.html", {"form": form})
 
 
@@ -65,3 +66,11 @@ def project_instructions(request, pk):
         project.instructions()
         return redirect("projects:project_list")
     return render(request, "projects/project_instructions.html", {"project": project})
+
+def import_csv(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    return HttpResponse(f"This is where CSV import for project '{project.name}' will happen.")
+
+def label_management(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    return HttpResponse(f"Label management for project '{project.name}' (coming soon).")

@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'annotation',
     'dataitem',
-    'projects'
+    'projects',
+    "markdownify",
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -121,3 +122,11 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MARKDOWNIFY = {
+    "default": {
+        "WHITELIST_TAGS": ["a", "abbr", "acronym", "b", "blockquote", "code", "em", "i",
+                           "li", "ol", "strong", "ul", "pre", "h1", "h2", "h3", "p", "span"],
+        "MARKDOWN_EXTENSIONS": ["markdown.extensions.fenced_code", "markdown.extensions.tables"],
+    }
+}

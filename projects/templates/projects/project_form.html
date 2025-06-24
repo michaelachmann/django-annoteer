@@ -35,12 +35,49 @@
             </div>
 
             <!-- Description field -->
-            <div class="mb-4">
+            <div class="mb-3">
               {{ form.description.label_tag }}
               {{ form.description }}
               {% if form.description.errors %}
                 <div class="invalid-feedback d-block">
                   {{ form.description.errors|striptags }}
+                </div>
+              {% endif %}
+            </div>
+
+            <!-- Instructions (Markdown supported) -->
+            <div class="mb-3">
+              {{ form.instructions.label_tag }}
+              {{ form.instructions }}
+              <div class="form-text">
+                Supports <a href="https://www.markdownguide.org/cheat-sheet/" target="_blank">Markdown formatting</a>
+                (e.g., `**bold**`, `# headings`, `- lists`)
+              </div>
+              {% if form.instructions.errors %}
+                <div class="invalid-feedback d-block">
+                  {{ form.instructions.errors|striptags }}
+                </div>
+              {% endif %}
+            </div>
+
+            <!-- Label Type -->
+            <div class="mb-3">
+              {{ form.label_type.label_tag }}
+              {{ form.label_type }}
+              {% if form.label_type.errors %}
+                <div class="invalid-feedback d-block">
+                  {{ form.label_type.errors|striptags }}
+                </div>
+              {% endif %}
+            </div>
+
+            <!-- Number of Annotators -->
+            <div class="mb-4">
+              {{ form.num_annotators.label_tag }}
+              {{ form.num_annotators }}
+              {% if form.num_annotators.errors %}
+                <div class="invalid-feedback d-block">
+                  {{ form.num_annotators.errors|striptags }}
                 </div>
               {% endif %}
             </div>
