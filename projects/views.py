@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import ProjectForm
 
 def project_list(request):
-    projects = Project.objects.all()
+    projects = Project.objects.filter(created_by=request.user)
     return render(request, "projects/project_list.html", {"projects": projects})
 
 
