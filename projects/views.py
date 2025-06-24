@@ -24,9 +24,10 @@ def project_detail(request, pk):
 
 
 @login_required
-def project_create(request):
+def project_create(request, pk):
     if request.method == "POST":
-        form = ProjectForm(request.POST)
+        project = get_object_or_404(Project, pk=pk)
+        form = ProjectForm(request.POST, instance=project)
         if form.is_valid():
             project = form.save(commit=False)
             project.created_by = request.user
