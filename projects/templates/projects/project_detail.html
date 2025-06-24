@@ -36,6 +36,11 @@
           <i class="bi bi-trash"></i> Delete
         </a>
 
+        <a href="{% url 'projects:project_instructions' project.pk %}"
+           class="btn btn-sm btn-outline-secondary">
+          <i class="bi bi-pencil"></i> Edit Instructions
+        </a>
+
         <a href="{% url 'projects:project_list' %}"
            class="btn btn-sm btn-outline-secondary">
           <i class="bi bi-arrow-left"></i> Back
@@ -92,6 +97,10 @@
                       <i class="bi bi-pencil"></i>
                     </a>
                     <a href="{% url 'dataitems:dataitem_delete' item.pk %}"
+                       class="btn btn-sm btn-outline-danger">
+                      <i class="bi bi-trash"></i>
+                    </a>
+                    <a href="{% url 'dataitems:dataitem_instructions' item.pk %}"
                        class="btn btn-sm btn-outline-danger">
                       <i class="bi bi-trash"></i>
                     </a>
