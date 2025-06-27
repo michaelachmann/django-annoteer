@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Anoteer | Delete Label
+{% endblock %}
+
+{% block content %}
+  <div class="row justify-content-center mt-5">
+    <div class="col-md-6 col-lg-5">
+      <div class="card border-danger shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title text-danger">Delete Label</h5>
+          <p>
+            Are you sure you want to delete the label:
+            <strong>{{ label.label }}</strong>
+            (<code>{{ label.value }}</code>)
+            from project <strong>{{ project.name }}</strong>?
+          </p>
+          <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Yes, delete</button>
+            <a href="{% url 'projects:label_management' project.pk %}" class="btn btn-secondary ms-2">
+              Cancel
+            </a>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
