@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Manage Labels – {{ project.name }}
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8 col-md-10">
+    <!-- ── Header ─────────────────────────────── -->
+    <div class="mb-4">
+      <h1 class="fw-bold">Manage Labels</h1>
+      <p class="text-secondary mb-0">
+        Project: <strong>{{ project.name }}</strong>
+      </p>
+    </div>
+
+    <!-- ── Back Button ─────────────────────────── -->
+    <div class="mb-3">
+      <a href="{% url 'projects:project_detail' project.pk %}" class="btn btn-sm btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Back to Project
+      </a>
+    </div>
+
+    <!-- ── Existing Labels ─────────────────────── -->
+    <div class="mb-4">
+      <h3 class="h5">Existing Labels</h3>
+      {% if labels %}
+        <ul class="list-group">
+          {% for label in labels %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span>
+                <strong>{{ label.label }}</strong>
+                <small class="text-muted ms-2">{{ label.value }}</small>
+              </span>
+              <span>
+                <a href="{% url 'projects:label_edit' label.pk %}" class="btn btn-sm btn-outline-primary me-1">
+                  <i class="bi bi-pencil"></i>
+                </a>
+                <a href="{% url 'projects:label_delete' label.pk %}" class="btn btn-sm btn-outline-danger">
+                  <i class="bi bi-trash"></i>
+                </a>
+              </span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <div class="alert alert-info">
+          No labels have been created yet.
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- ── Add Label Form ───────────────────────── -->
+    <div class="mb-4">
+      <h3 class="h5">Add New Label</h3>
+      <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+          {{ form.label.label_tag }}
+          {{ form.label }}
+          {% if form.label.errors %}
+            <div class="text-danger">{{ form.label.errors }}</div>
+          {% endif %}
+        </div>
+        <div class="mb-3">
+          {{ form.value.label_tag }}
+          {{ form.value }}
+          {% if form.value.errors %}
+            <div class="text-danger">{{ form.value.errors }}</div>
+          {% endif %}
+        </div>
+        <button type="submit" name="action" value="create" class="btn btn-success">
+            <i class="bi bi-plus-lg"></i> Create Label
+            </button>
+
+        <button type="submit" name="action" value="create_and_exit" class="btn btn-primary">
+            <i class="bi bi-save"></i> Save and Return to Project
+            </button>
+
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}
+Manage Labels – {{ project.name }}
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8 col-md-10">
+
+    <h1 class="fw-bold mb-4">Manage Labels (Bulk)</h1>
+    <a href="{% url 'projects:project_detail' project.pk %}" class="btn btn-sm btn-outline-secondary mb-3">
+      <i class="bi bi-arrow-left"></i> Back to Project
+    </a>
+
+    <form method="post">
+      {% csrf_token %}
+      {{ formset.management_form }}
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Label</th>
+            <th>Value</th>
+            <th>Delete?</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for form in formset %}
+            <tr>
+              <td>{{ form.label }}</td>
+              <td>{{ form.value }}</td>
+              <td>
+                {% if form.instance.pk %}
+                  {{ form.DELETE }}
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <button type="submit" class="btn btn-primary">
+        <i class="bi bi-save"></i> Save All Labels
+      </button>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

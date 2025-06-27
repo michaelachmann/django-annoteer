@@ -30,9 +30,9 @@
           <i class="bi bi-trash"></i> Delete
         </a>
 
-        <a href="{% url 'projects:project_instructions' project.pk %}"
-           class="btn btn-sm btn-outline-secondary">
-          <i class="bi bi-pencil"></i> Edit Instructions
+        <a href="{% url 'projects:label_management' project.pk %}"
+           class="btn btn-sm btn-outline-success">
+          <i class="bi bi-pencil"></i> Edit Labels
         </a>
 
         <a href="{% url 'projects:project_list' %}"

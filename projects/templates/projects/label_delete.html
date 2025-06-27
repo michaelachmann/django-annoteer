@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}
+Delete Label – {{ project.name }}
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-6 col-md-8">
+
+    <h1 class="fw-bold mb-4 text-danger">Delete Label</h1>
+
+    <p>Are you sure you want to delete the label:</p>
+    <ul>
+      <li><strong>{{ label.label }}</strong></li>
+      <li><small class="text-muted">{{ label.value }}</small></li>
+    </ul>
+
+    <form method="post" class="mt-3">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">
+        <i class="bi bi-trash"></i> Confirm Delete
+      </button>
+      <a href="{% url 'projects:label_management' pk=project.pk %}" class="btn btn-secondary">
+        Cancel
+      </a>
+    </form>
+
+  </div>
+</div>
+{% endblock %}
