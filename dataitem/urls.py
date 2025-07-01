@@ -5,6 +5,7 @@ from .views import (
     dataitem_create,
     dataitem_update,
     dataitem_delete,
+    data_import_view,
 )
 
 app_name = "dataitems"
@@ -15,4 +16,6 @@ urlpatterns = [
     path("create/", dataitem_create, name="dataitem_create"),
     path("<int:pk>/update/", dataitem_update, name="dataitem_update"),
     path("<int:pk>/delete/", dataitem_delete, name="dataitem_delete"),
+    path("<int:pk>/import/", data_import_view, name="data_import"),
+
 ]

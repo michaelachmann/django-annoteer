@@ -9,6 +9,8 @@ from dataitem.models import Dataitem
 from .models import Project, Label
 from django.contrib.auth.decorators import login_required
 from .forms import ProjectForm, LabelForm
+from django.db.models import Count, Q
+from dataitem.models import Dataitem
 
 def project_list(request):
     projects = Project.objects.filter(created_by=request.user)
@@ -157,3 +159,6 @@ def label_delete(request, pk):
         "label": label,
         "project": project,
     })
+
+
+
