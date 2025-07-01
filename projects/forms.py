@@ -6,7 +6,7 @@ from .models import Project
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
-        fields = ["name", "description", "instructions", "label-type", "number of annotators"]
+        fields = ["name", "description", "instructions", "label_type", "num_annotators"]
         widgets = {
             "name": forms.TextInput(attrs={
                 "class": "form-control",
@@ -22,11 +22,11 @@ class ProjectForm(forms.ModelForm):
                 "rows": 4,
                 "placeholder": "Enter instructions (optional)"
             }),
-            "label-type": forms.Select(attrs={
+            "label_type": forms.Select(attrs={
                 "class": "form-control",
                 "placeholder": "Select label-type (optional)"
             }),
-            "number of annotators": forms.NumberInput(attrs={
+            "num_annotators": forms.NumberInput(attrs={
                 "class": "form-control",
                 "placeholder": "Enter number of annotators (optional)"
             })
