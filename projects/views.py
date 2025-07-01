@@ -7,6 +7,8 @@ from dataitem.models import Dataitem
 from .models import Project
 from django.contrib.auth.decorators import login_required
 from .forms import ProjectForm
+from .models import Label
+from .forms import LabelForm
 
 def project_list(request):
     projects = Project.objects.filter(created_by=request.user)
@@ -59,3 +61,18 @@ def project_delete(request, pk):
         project.delete()
         return redirect("projects:project_list")
     return render(request, "projects/project_confirm_delete.html", {"project": project})
+
+@login_required
+def label_list(request):
+    labels = Label.objects.select_related('project').all()
+    return render(request, 'labels/label_list.html', {'labels': labels})
+
+def label_create(request):
+    if request.method == 'POST':
+        form = LabelForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('label_list')
+    else:
+        form = LabelForm()
+    return render(request, 'labels/label_form.html', {'form': form})

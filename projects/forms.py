@@ -1,5 +1,6 @@
 from django import forms
 from .models import Project
+from .models import Label
 
 
 # projects/forms.py
@@ -31,3 +32,9 @@ class ProjectForm(forms.ModelForm):
                 "placeholder": "Enter number of annotators (optional)"
             })
         }
+
+
+class LabelForm(forms.ModelForm):
+    class Meta:
+        model = Label
+        fields = ['project', 'label', 'value']
