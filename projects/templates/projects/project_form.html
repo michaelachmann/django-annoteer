@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block content %}
+{{error}}
   <div class="row justify-content-center">
     <div class="col-md-8 col-lg-6">
       <div class="card shadow-sm mb-4">
@@ -41,6 +42,39 @@
               {% if form.description.errors %}
                 <div class="invalid-feedback d-block">
                   {{ form.description.errors|striptags }}
+                </div>
+              {% endif %}
+            </div>
+
+                        <!-- Instructions field -->
+            <div class="mb-4">
+              {{ form.instructions.label_tag }}
+              {{ form.instructions }}
+              {% if form.instructions.errors %}
+                <div class="invalid-feedback d-block">
+                  {{ form.instructions.errors|striptags }}
+                </div>
+              {% endif %}
+            </div>
+
+            <!-- label_type field -->
+            <div class="mb-4">
+              {{ form.label_type.label_tag }}
+              {{ form.label_type }}
+              {% if form.label_type.errors %}
+                <div class="invalid-feedback d-block">
+                  {{ form.label_type.errors|striptags }}
+                </div>
+              {% endif %}
+            </div>
+
+                        <!-- num_annotators field -->
+            <div class="mb-4">
+              {{ form.num_annotators.label_tag }}
+              {{ form.num_annotators }}
+              {% if form.num_annotators.errors %}
+                <div class="invalid-feedback d-block">
+                  {{ form.num_annotators.errors|striptags }}
                 </div>
               {% endif %}
             </div>
