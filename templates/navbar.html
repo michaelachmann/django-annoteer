@@ -5,6 +5,7 @@
                 <li><a href="{% url 'home' %}" class="nav-link px-2 {% if request.resolver_match.url_name == 'home' %}link-secondary{% else %}link-body-emphasis{% endif %}">Home</a></li>
                 <li><a href="{% url 'projects:project_list' %}" class="nav-link px-2 {% if request.resolver_match.url_name == 'project_list' %}link-secondary{% else %}link-body-emphasis{% endif %}">Projects</a></li>
                 <li><a href="{% url 'dataitems:dataitem_list' %}" class="nav-link px-2 {% if request.resolver_match.url_name == 'dataitem_list' %}link-secondary{% else %}link-body-emphasis{% endif %}">Data</a></li>
+                <li><a href="{% url 'login' %}" class="nav-link px-2 {% if request.resolver_match.url_name == 'login' %}link-secondary{% else %}link-body-emphasis{% endif %}">Login</a></li>
             </ul>
     </div>
 </header>
