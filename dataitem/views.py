@@ -3,11 +3,15 @@ from django.contrib.auth.decorators import login_required
 from .models import Dataitem
 from .forms import DataitemForm
 from .forms import DataImportForm
-from .models import Dataitem
+from .models import Dataitem, DataBatch
 from projects.models import Project
+import csv
+from io import TextIOWrapper
+from django.contrib import messages
+from django.http import HttpResponseBadRequest
 
 def dataitem_list(request):
-    dataitems = Dataitem.objects.all()
+    dataitem = Dataitem.objects.all()
     return render(request, "dataitem/dataitem_list.html", {"dataitem": dataitem})
 
 
@@ -18,17 +22,25 @@ def dataitem_detail(request, pk):
 
 @login_required
 def dataitem_create(request):
+    project_id = request.GET.get("project")
+
+    if not project_id:
+        return HttpResponseBadRequest("A project ID is required to create a Dataitem.")
+
     if request.method == "POST":
         form = DataitemForm(request.POST)
         if form.is_valid():
             dataitem = form.save(commit=False)
             dataitem.created_by = request.user
-            # Optionally set project here if applicable
+            dataitem.project_id = project_id
             dataitem.save()
-            return redirect("dataitem:dataitem_list")
+            return redirect("projects:project_detail", pk=project_id)
     else:
         form = DataitemForm()
-    return render(request, "dataitem/dataitem_form.html", {"form": form})
+
+    return render(request, "dataitems/dataitem_form.html", {"form": form})
+
+
 
 
 @login_required
@@ -57,54 +69,72 @@ def data_import_view(request, project_pk):
         form = DataImportForm(request.POST, request.FILES)
         if form.is_valid():
             csv_file = form.cleaned_data["csv_file"]
-
             decoded_file = TextIOWrapper(csv_file.file, encoding="utf-8")
             reader = csv.DictReader(decoded_file)
 
             required_fields = {"id", "text"}
             if not required_fields.issubset(reader.fieldnames):
                 messages.error(request, "CSV must contain 'id' and 'text' columns.")
-                return redirect("data_import", project_pk=project.pk)
+                return redirect("dataitems:data_import", project_pk=project.pk)
 
-            created_count = 0
-            skipped_count = 0
+            # ✅ Create DataBatch
+            batch = DataBatch.objects.create(
+                project=project,
+                name=csv_file.name,
+                uploaded_by=request.user
+            )
 
+            items = []
             for row in reader:
-                ext_id = row["id"].strip()
-                text = row["text"].strip()
+                ext_id = (row.get("id") or "").strip()
+                text = (row.get("text") or "").strip()
 
+                # Skip empty rows
                 if not ext_id or not text:
-                    skipped_count += 1
                     continue
 
-                obj, created = Dataitem.objects.get_or_create(
+                item = Dataitem(
+                    project=project,
+                    batch=batch,
                     external_id=ext_id,
-                    defaults={
-                        "text": text,
-                        "project": project,
-                        "name": f"Imported {ext_id}",
-                        "description": "",
-                        "created_by": request.user
-                    }
+                    text=text,
+                    created_by=request.user,
+                    name=f"Imported {ext_id}",
+                    description=""
                 )
+                items.append(item)
 
-                if created:
-                    created_count += 1
-                else:
-                    # You could choose to update text here
-                    # obj.text = text
-                    # obj.save()
-                    skipped_count += 1
+            total_items = len(items)
+
+            if total_items == 0:
+                messages.warning(request, "Keine gültigen Zeilen zum Import gefunden.")
+                return redirect("dataitems:data_import", project_pk=project.pk)
+
+            # ✅ Bulk create with ignore_conflicts (duplicates skipped automatically)
+            Dataitem.objects.bulk_create(items, ignore_conflicts=True)
+
+            # ✅ Count how many were actually created in this batch
+            created_count = Dataitem.objects.filter(batch=batch).count()
+            skipped_count = total_items - created_count
 
             messages.success(
                 request,
-                f"Import complete: {created_count} new items, {skipped_count} skipped."
+                f"{created_count} neue Texte importiert, {skipped_count} Duplikate übersprungen."
             )
-            return redirect("project_detail", pk=project.pk)
+            return redirect("projects:project_detail", pk=project.pk)
+
     else:
         form = DataImportForm()
 
-    return render(request, "dataitem/data_import.html", {
+    return render(request, "dataitems/data_import.html", {
         "project": project,
         "form": form
     })
+
+@login_required
+def batch_detail(request, pk):
+    batch = get_object_or_404(DataBatch, pk=pk)
+    items = batch.dataitems.all()
+    return render(request, "dataitems/batch_detail.html", {"batch": batch, "dataitems": items})
+
+print("=== Running import_csv ===")

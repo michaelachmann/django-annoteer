@@ -6,7 +6,7 @@ from .views import (
     project_update,
     project_delete,
     project_instructions,
-    import_csv,
+
     label_management,
     label_edit,
     label_delete,
@@ -23,7 +23,7 @@ urlpatterns = [
     path("<int:pk>/update/", project_update, name="project_update"),
     path("<int:pk>/delete/", project_delete, name="project_delete"),
     path("<int:pk>/instructions/", project_instructions, name="project_instructions"),
-    path("<int:pk>/import/", import_csv, name="import_csv"),
+
     path("<int:pk>/labels/", label_management, name="label_management"),
     path("<int:pk>/labels/bulk/", project_labels_bulk, name="project_labels_bulk"),
     path("labels/<int:pk>/edit/", label_edit, name="label_edit"),

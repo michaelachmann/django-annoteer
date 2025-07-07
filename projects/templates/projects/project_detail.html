@@ -41,10 +41,11 @@
         </a>
 
         {# If you have a DataitemCreateView that accepts a project pk, you could do: #}
-        <a href="{% url 'dataitems:dataitem_create' %}"
-           class="btn btn-sm btn-primary ms-auto">
-          <i class="bi bi-plus-lg"></i> New Data Item
-        </a>
+       <a href="{% url 'dataitems:data_import' project.pk %}"
+   class="btn btn-sm btn-primary ms-auto">
+  <i class="bi bi-plus-lg"></i> Import Data
+</a>
+
       </div>
 <!-- ── Project Details Table ────────────────────────────────────────────── -->
 <div class="mb-4">
@@ -111,77 +112,48 @@
     </tbody>
   </table>
 
-  <a href="{% url 'projects:import_csv' project.pk %}" class="btn btn-outline-primary mt-2">
-    <i class="bi bi-upload"></i> Texte importieren
-  </a>
+
 </div>
 
       <!-- ── Divider ────────────────────────────────────────────────────────────── -->
       <hr>
 
       <!-- ── “Data Items” Section ───────────────────────────────────────────────── -->
-      <div class="mb-3">
-        <h3 class="h5">Data Items</h3>
-      </div>
+     <div class="mb-3">
+  <h3 class="h5">Data Batches</h3>
+</div>
 
-      {% if dataitems %}
-        <div class="table-responsive">
-          <table class="table table-striped align-middle">
-            <thead class="table-light">
-              <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Description</th>
-                <th scope="col">Created By</th>
-                <th scope="col">Created At</th>
-                <th scope="col" class="text-end">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for item in dataitems %}
-                <tr>
-                  <td>{{ item.name }}</td>
-                  <td>
-                    {% if item.description %}
-                      {{ item.description|truncatechars:50 }}
-                    {% else %}
-                      <span class="text-muted fst-italic">–</span>
-                    {% endif %}
-                  </td>
-                  <td>{{ item.created_by }}</td>
-                  <td>{{ item.created_at|date:"M d, Y" }}</td>
-                  <td class="text-end">
-                    {# Adjust these URL names if your Dataitem app uses different names #}
-                    <a href="{% url 'dataitems:dataitem_detail' item.pk %}"
-                       class="btn btn-sm btn-outline-primary me-1">
-                      <i class="bi bi-eye"></i>
-                    </a>
-                    <a href="{% url 'dataitems:dataitem_update' item.pk %}"
-                       class="btn btn-sm btn-outline-secondary me-1">
-                      <i class="bi bi-pencil"></i>
-                    </a>
-                    <a href="{% url 'dataitems:dataitem_delete' item.pk %}"
-                       class="btn btn-sm btn-outline-danger">
-                      <i class="bi bi-trash"></i>
-                    </a>
-                    <a href="{% url 'dataitems:dataitem_instructions' item.pk %}"
-                       class="btn btn-sm btn-outline-danger">
-                      <i class="bi bi-trash"></i>
-                    </a>
-                  </td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      {% else %}
-        <div class="alert alert-info">
-          No Data Items found for this project.
-          <a href="{% url 'dataitems:dataitem_create' %}" class="alert-link">
-            Create one now.
-          </a>
-        </div>
-      {% endif %}
-
-    </div>
+{% if project.batches.all %}
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Uploaded By</th>
+        <th>Uploaded At</th>
+        <th>Items</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for batch in project.batches.all %}
+        <tr>
+          <td>{{ batch.name }}</td>
+          <td>{{ batch.uploaded_by }}</td>
+          <td>{{ batch.uploaded_at|date:"M d, Y" }}</td>
+          <td>{{ batch.dataitems.count }}</td>
+          <td>
+            <a href="{% url 'dataitems:batch_detail' batch.pk %}" class="btn btn-sm btn-primary">
+              View Items
+            </a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <div class="alert alert-info">
+    No data batches have been uploaded for this project.
   </div>
+{% endif %}
+
 {% endblock %}

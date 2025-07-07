@@ -1,14 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}
-  Import Dataitems
-{% endblock %}
-
 {% block content %}
-  <h2>Import Dataitems into "{{ project.name }}"</h2>
+  <h2>CSV-Import für Projekt "{{ project.name }}"</h2>
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Upload</button>
+    <div class="mb-3">
+      <label for="csv_file">CSV-Datei auswählen:</label>
+      <input type="file" name="csv_file" id="csv_file" class="form-control">
+    </div>
+    <button type="submit" class="btn btn-primary">Import starten</button>
   </form>
 {% endblock %}

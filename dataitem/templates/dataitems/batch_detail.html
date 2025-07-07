@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Batch: {{ batch.name }}</h2>
+<p><strong>Project:</strong> {{ batch.project.name }}</p>
+<p><strong>Uploaded by:</strong> {{ batch.uploaded_by }}</p>
+<p><strong>Uploaded at:</strong> {{ batch.uploaded_at|date:"M d, Y" }}</p>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>External ID</th>
+      <th>Text</th>
+      <th>Created By</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in dataitems %}
+      <tr>
+        <td>{{ item.external_id }}</td>
+        <td>{{ item.text|truncatechars:50 }}</td>
+        <td>{{ item.created_by }}</td>
+        <td>
+          <a href="{% url 'dataitems:dataitem_detail' item.pk %}" class="btn btn-sm btn-outline-primary">View</a>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

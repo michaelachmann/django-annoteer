@@ -11,7 +11,14 @@ from django.contrib.auth.decorators import login_required
 from .forms import ProjectForm, LabelForm
 from django.db.models import Count, Q
 from dataitem.models import Dataitem
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from django.utils import timezone
+import csv
+from io import TextIOWrapper
 
+from .models import Project
+from dataitem.models import DataBatch
 def project_list(request):
     projects = Project.objects.filter(created_by=request.user)
     return render(request, "projects/project_list.html", {"projects": projects})
@@ -69,9 +76,6 @@ def project_instructions(request, pk):
         return redirect("projects:project_list")
     return render(request, "projects/project_instructions.html", {"project": project})
 
-def import_csv(request, pk):
-    project = get_object_or_404(Project, pk=pk)
-    return HttpResponse(f"This is where CSV import for project '{project.name}' will happen.")
 
 @login_required
 def label_management(request, pk):
