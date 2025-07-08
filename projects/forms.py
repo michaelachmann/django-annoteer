@@ -1,7 +1,8 @@
 from django import forms
 from .models import Project
+from django import forms
+from .models import Project
 from .models import Label
-
 
 # projects/forms.py
 class ProjectForm(forms.ModelForm):
@@ -33,8 +34,17 @@ class ProjectForm(forms.ModelForm):
             })
         }
 
-
 class LabelForm(forms.ModelForm):
     class Meta:
         model = Label
-        fields = ['project', 'label', 'value']
+        fields = ["label", "value"]
+        widgets = {
+            "label": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "z. B. Positiv"
+            }),
+            "value": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "z. B. POS"
+            })
+        }

@@ -3,10 +3,10 @@ from django.contrib.auth.models import User
 
 
 class Project(models.Model):
-    LABEL_TYPES = {
-        'SI': 'Single-Label (Radio)',
-        'MU': 'Multi-Label (Checkbox)'
-    }
+    LABEL_TYPES = [
+        ('SI', 'Single-Label (Radio)'),
+        ('MU', 'Multi-Label (Checkbox)')
+    ]
 
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
@@ -33,4 +33,8 @@ class Label(models.Model):
     value = models.CharField(max_length=255)
 
     class Meta:
-        unique_together = ('project', 'label')
+        unique_together = ('project', 'value')
+        ordering = ['label']
+
+    def __str__(self):
+        return f'{self.label} ({self.value})'
