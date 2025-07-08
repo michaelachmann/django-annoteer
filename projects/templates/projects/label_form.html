@@ -1,10 +1,15 @@
 {% extends "base.html" %}
 
 {% block title %}
-  Anoteer | {% if form.instance.pk %}Edit{% else %}Create{% endif %} Project
+  Anoteer | {% if form.instance.pk %}Edit{% else %}Create{% endif %} Label
 {% endblock %}
 
 {% block content %}
+    <div class="mb-3">
+  <a href="{% url 'projects:project_detail' project.id %}" class="text-decoration-none">
+    <i class="bi bi-arrow-left"></i> Back to Project
+  </a>
+</div>
   <div class="row justify-content-center">
     <div class="col-md-8 col-lg-6">
       <div class="card shadow-sm mb-4">
@@ -12,10 +17,10 @@
           <h5 class="mb-0">
             {% if form.instance.pk %}
               <i class="bi bi-pencil-square"></i>
-              Edit Project
+              Edit Label
             {% else %}
               <i class="bi bi-plus-lg"></i>
-              Create Project
+              Create Label for Project {{ project.name }}
             {% endif %}
           </h5>
         </div>
@@ -23,38 +28,28 @@
           <form method="post" novalidate>
             {% csrf_token %}
 
-            <!-- Name field -->
+            <!-- Label field -->
             <div class="mb-3">
-              {{ form.name.label_tag }}
-              {{ form.name }}
-              {% if form.name.errors %}
+              {{ form.label.label_tag }}
+              {{ form.label }}
+              {% if form.label.errors %}
                 <div class="invalid-feedback d-block">
-                  {{ form.name.errors|striptags }}
+                  {{ form.label.errors|striptags }}
                 </div>
               {% endif %}
             </div>
 
-            <!-- Description field -->
-            <div class="mb-4">
-              {{ form.description.label_tag }}
-              {{ form.description }}
-              {% if form.description.errors %}
+            <!-- Value field -->
+            <div class="mb-3">
+              {{ form.value.label_tag }}
+              {{ form.value }}
+              {% if form.value.errors %}
                 <div class="invalid-feedback d-block">
-                  {{ form.description.errors|striptags }}
+                  {{ form.value.errors|striptags }}
                 </div>
               {% endif %}
             </div>
 
-              <!-- Description field -->
-            <div class="mb-4">
-              {{ form.instruction.label_tag }}
-              {{ form.instruction }}
-              {% if form.instruction.errors %}
-                <div class="invalid-feedback d-block">
-                  {{ form.instruction.errors|striptags }}
-                </div>
-              {% endif %}
-            </div>
 
             <!-- Buttons -->
             <div class="d-flex justify-content-end">

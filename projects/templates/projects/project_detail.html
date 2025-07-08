@@ -31,6 +31,11 @@
           <i class="bi bi-pencil"></i> Edit
         </a>
 
+         <a href="{% url 'projects:label_create' project.pk %}"
+           class="btn btn-sm btn-outline-secondary">
+          <i class="bi bi-tag-fill"></i> Add Labels
+        </a>
+
         <a href="{% url 'projects:project_delete' project.pk %}"
            class="btn btn-sm btn-outline-danger">
           <i class="bi bi-trash"></i> Delete

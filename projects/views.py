@@ -6,10 +6,11 @@ from django.shortcuts import render, get_object_or_404, redirect
 from dataitem.models import Dataitem
 from .models import Project
 from django.contrib.auth.decorators import login_required
-from .forms import ProjectForm
+from .forms import ProjectForm, LabelForm
+
 
 def project_list(request):
-    projects = Project.objects.all()
+    projects = Project.objects.filter(created_by=request.user)
     return render(request, "projects/project_list.html", {"projects": projects})
 
 
@@ -20,7 +21,6 @@ def project_detail(request, pk):
         "project": project,
         "dataitems": dataitems,
     })
-
 
 
 @login_required
@@ -47,7 +47,6 @@ def project_update(request, pk):
     return render(request, "projects/project_form.html", {"form": form})
 
 
-
 @login_required
 def project_delete(request, pk):
     project = get_object_or_404(Project, pk=pk)
@@ -55,3 +54,21 @@ def project_delete(request, pk):
         project.delete()
         return redirect("projects:project_list")
     return render(request, "projects/project_confirm_delete.html", {"project": project})
+
+
+@login_required
+def label_create(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+
+    if request.method == "POST":
+        form = LabelForm(request.POST)
+        if form.is_valid():
+            label = form.save(commit=False)
+            label.created_by = request.user
+            label.project = project
+            label.save()
+            return redirect("projects:label_create", pk=project.id)
+    else:
+        form = LabelForm()
+
+    return render(request, "projects/label_form.html", {"form": form, "project": project})
