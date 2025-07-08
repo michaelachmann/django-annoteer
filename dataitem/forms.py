@@ -8,6 +8,9 @@ class DataitemForm(forms.ModelForm):
         fields = ["name", "description", "text"]
 
 
+
+
+
 class DataImportForm(forms.Form):
     csv_file = forms.FileField(
         label="CSV File",
