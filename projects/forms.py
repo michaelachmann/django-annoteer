@@ -1,6 +1,8 @@
 from django import forms
 from .models import Project
-
+from django import forms
+from .models import Project
+from .models import Label
 
 # projects/forms.py
 class ProjectForm(forms.ModelForm):
@@ -29,5 +31,20 @@ class ProjectForm(forms.ModelForm):
             "num_annotators": forms.NumberInput(attrs={
                 "class": "form-control",
                 "placeholder": "Enter number of annotators (optional)"
+            })
+        }
+
+class LabelForm(forms.ModelForm):
+    class Meta:
+        model = Label
+        fields = ["label", "value"]
+        widgets = {
+            "label": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "z. B. Positiv"
+            }),
+            "value": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "z. B. POS"
             })
         }

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+  <div class="container">
+    <h1 class="mb-4">Labels verwalten für: <strong>{{ project.name }}</strong></h1>
+
+    <form method="post" id="label-formset">
+      {% csrf_token %}
+      {{ formset.management_form }}
+
+      <div id="formset-container">
+        {% for form in formset %}
+          <div class="formset-form border rounded p-3 mb-3">
+            <div class="mb-2">
+              {{ form.label.label_tag }} {{ form.label }}
+            </div>
+            <div class="mb-2">
+              {{ form.value.label_tag }} {{ form.value }}
+            </div>
+            {% if form.DELETE %}
+              <div class="form-check">
+                {{ form.DELETE }} <label class="form-check-label">Entfernen</label>
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+
+      <button type="button" class="btn btn-outline-secondary mb-3" id="add-form">
+        + Label hinzufügen
+      </button>
+
+      <div>
+        <button type="submit" class="btn btn-primary">Speichern</button>
+        <a href="{% url 'projects:project_detail' project.pk %}" class="btn btn-secondary">Zurück</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}
+
+<script>
+  const addFormBtn = document.getElementById("add-form");
+  const formsetContainer = document.getElementById("formset-container");
+  const totalForms = document.getElementById("id_label_set-TOTAL_FORMS");
+
+  addFormBtn.addEventListener("click", function () {
+    const currentFormCount = parseInt(totalForms.value);
+    const newForm = formsetContainer.children[0].cloneNode(true);
+
+    // Leere Eingabefelder
+    newForm.querySelectorAll("input").forEach(input => {
+      if (input.type !== "hidden") input.value = "";
+    });
+
+    // IDs und Namen anpassen
+    newForm.innerHTML = newForm.innerHTML.replaceAll(`label_set-0`, `label_set-${currentFormCount}`);
+
+    formsetContainer.appendChild(newForm);
+    totalForms.value = currentFormCount + 1;
+  });
+</script>
+

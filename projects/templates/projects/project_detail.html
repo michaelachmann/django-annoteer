@@ -1,8 +1,14 @@
 {% extends "base.html" %}
 
+{% load markdownify %}
+{{ project.instructions|markdownify }}
+
+
+
 {% block title %}
   Anoteer | {{ project.name }}
 {% endblock %}
+
 
 
 {% block content %}
@@ -12,28 +18,63 @@
       <!-- ── Project Header  ────────────────────────────────── -->
       <div class="mb-4">
         <h1 class="fw-bold">{{ project.name }}</h1>
-
-      <tr>
-          <th> Project name </th>
-          <th> Description </th>
-          <th> Instruction </th>
-          <th> Label type </th>
-          <th> Number of annotators </th>
-          <th> Label </th>
-      </tr>
-      <tr>
-        <td> </th><h1 class="fw-bold">{{ project.name }}</h1> </td>
-
-        <td> {% if project.description %}
-            <p class="lead">{{ project.description | markdown | safe }}</p>
-        {% else %}
-          <p class="text-muted fst-italic">No description provided for this project.</p>
-        {% endif %}
-
-        <p class="text-secondary small mb-0">
-          Created by <strong>{{ project.created_by }}</strong>
-          on {{ project.created_at|date:"M d, Y" }}
-        </p>
+      </div>
+      <!-- ── Project Details Table  ─────────────────────────── -->
+      <div class="mb-4">
+          <h2 class="h5">Project Details</h2>
+          <table class="table table-bordered">
+              <tbody>
+                <tr>
+                    <th scope="row">Description</th>
+                    <td>
+                        {% if project.description %}
+                            {{ project.description|markdownify|safe }}
+                        {% else %}
+                            <span class="text-muted fst-italic">No description provided</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                  <th scope="row">Created by</th>
+                  <td>
+                    {{ project.created_by }} on {{ project.created_at|date:"M d, Y" }}
+                  </td>
+                </tr>
+                <tr>
+                    <th scope="row">Instruction</th>
+                    <td>
+                      {% if project.instruction %}
+                        {{ project.instruction|markdownify|safe }}
+                      {% else %}
+                        <span class="text-muted fst-italic">No instructions provided.</span>
+                      {% endif %}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Label Type</th>
+                    <td>{{ project.get_label_type_display }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Number of Annotators</th>
+                    <td>{{ project.num_annotators }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Labels</th>
+                    <td>
+                      {% if project.label_set.all %}
+                        <ul class="mb-0">
+                          {% for label in project.label_set.all %}
+                            <li><strong>{{ label.label }}</strong> ({{ label.value }})</li>
+                          {% endfor %}
+                        </ul>
+                      {% else %}
+                        <span class="text-muted fst-italic">No labels defined.</span>
+                      {% endif %}
+                    </td>
+                  </tr>
+                </tr>
+              </tbody>
+          </table>
       </div>
 
       <!-- ── Action Buttons Toolbar ────────────────────────────────────────────── -->
@@ -58,6 +99,11 @@
            class="btn btn-sm btn-primary ms-auto">
           <i class="bi bi-plus-lg"></i> New Data Item
         </a>
+
+        <!--a href="{% url 'dataitems:dataitem_upload' project.pk %#}"
+           class="btn btn-outline-success">
+           <i class="bi bi-upload"></i> Import texts or images
+        </a-->
       </div>
 
       <!-- ── Divider ────────────────────────────────────────────────────────────── -->

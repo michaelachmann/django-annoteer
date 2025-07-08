@@ -31,3 +31,10 @@ class Label(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     label = models.CharField(max_length=255)
     value = models.CharField(max_length=255)
+
+    class Meta:
+        unique_together = ('project', 'value')
+        ordering = ['label']
+
+    def __str__(self):
+        return f'{self.label} ({self.value})'

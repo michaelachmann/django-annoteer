@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'annotation',
     'dataitem',
-    'projects'
+    'projects',
+    'markdownify'
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -67,6 +68,13 @@ TEMPLATES = [
         },
     },
 ]
+
+MARKDOWNIFY = {
+    "default": {
+        "WHITELIST_TAGS": ["a", "abbr", "acronym", "b", "blockquote", "code", "em", "i", "li", "ol", "strong", "ul", "h1", "h2", "h3", "p"],
+        "MARKDOWN_EXTENSIONS": ["markdown.extensions.fenced_code", "markdown.extensions.tables"],
+    }
+}
 
 WSGI_APPLICATION = 'annoteer.wsgi.application'
 

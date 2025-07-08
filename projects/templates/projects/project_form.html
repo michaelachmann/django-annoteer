@@ -88,14 +88,22 @@
                 {% if form.instance.pk %}Save Changes{% else %}Create Project{% endif %}
               </button>
             </div>
+          {% if form.instance.pk %}
             <div class="d-flex justify-content-end">
-                <a href="{% url "projects:label_list" %}" class="btn btn-secondary me-2">
-                    Cancel
+                <a href="{% url "projects:label_manage" form.instance.pk %}" class="btn btn-secondary me-2">
+                    Weiter zur Labelverwaltung
                 </a>
                 <button type="submit" class="btn btn-primary">
-                    {% if form.intance.pk %}Add Label{% else %}Create Label{% endif %}
+                    Add Label
                 </button>
             </div>
+          {% else %}
+            <div class="d-flex justify-content-end">
+              <button type ="submit" class="btn btn primary">
+                  Create Project
+              </button>
+            </div>
+          {% endif %}
           </form>
         </div>
       </div>
