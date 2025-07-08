@@ -16,7 +16,7 @@ def project_list(request):
 
 def project_detail(request, pk):
     project = get_object_or_404(Project, pk=pk)
-    dataitems = Dataitem.objects.filter(project=project)
+    dataitems = Dataitem.objects.filter(project=project)[:10]
     return render(request, "projects/project_detail.html", {
         "project": project,
         "dataitems": dataitems,
