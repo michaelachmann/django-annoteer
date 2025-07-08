@@ -1,7 +1,8 @@
 # projects/views.py
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-
+from django.db import IntegrityError
+from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.forms import inlineformset_factory
@@ -77,26 +78,48 @@ def project_instructions(request, pk):
     return render(request, "projects/project_instructions.html", {"project": project})
 
 
+
+
 @login_required
 def label_management(request, pk):
     project = get_object_or_404(Project, pk=pk)
     labels = project.label_set.all()
 
     if request.method == "POST":
+        action = request.POST.get("action")
         form = LabelForm(request.POST, project=project)
+
+        if action == "create_and_exit":
+            # If any field was filled, validate and save
+            if any(request.POST.get(field) for field in form.fields):
+                # Check for duplicates
+                if project.label_set.filter(value=form.data.get("value")).exists():
+                    messages.error(request, "A label with this value already exists in this project.")
+                    return redirect("projects:project_detail", pk=project.pk)
+
+                if form.is_valid():
+                    label = form.save(commit=False)
+                    label.project = project
+                    label.save()
+            # Redirect regardless
+            return redirect("projects:project_detail", pk=project.pk)
+
+        # Default action (create and stay)
+        # Check for duplicates
+        if project.label_set.filter(value=form.data.get("value")).exists():
+            form.add_error("value", "A label with this value already exists in this project.")
+            return render(request, "projects/project_label.html", {
+                "project": project,
+                "labels": labels,
+                "form": form,
+            })
+
         if form.is_valid():
             label = form.save(commit=False)
             label.project = project
             label.save()
+            return redirect("projects:label_management", pk=project.pk)
 
-            # Check which button was clicked
-            action = request.POST.get("action")
-            if action == "create_and_exit":
-                # Redirect to Project Detail page
-                return redirect("projects:project_detail", pk=project.pk)
-            else:
-                # Default: stay on label management page
-                return redirect("projects:label_management", pk=project.pk)
     else:
         form = LabelForm(project=project)
 
@@ -104,32 +127,6 @@ def label_management(request, pk):
         "project": project,
         "labels": labels,
         "form": form,
-    })
-
-@login_required
-def project_labels_bulk(request, pk):
-    project = get_object_or_404(Project, pk=pk)
-
-    LabelFormSet = inlineformset_factory(
-        Project,
-        Label,
-        form=LabelForm,
-        fields=("label", "value"),
-        extra=3,
-        can_delete=True
-    )
-
-    if request.method == "POST":
-        formset = LabelFormSet(request.POST, instance=project)
-        if formset.is_valid():
-            formset.save()
-            return redirect("projects:project_detail", pk=project.pk)
-    else:
-        formset = LabelFormSet(instance=project)
-
-    return render(request, "projects/label_formset.html", {
-        "project": project,
-        "formset": formset,
     })
 @login_required
 def label_edit(request, pk):
