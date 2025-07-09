@@ -1,14 +1,21 @@
 {% extends "base.html" %}
 
 {% block title %}
-  Anoteer | Delete Project
+  Anoteer | Delete DataItem
 {% endblock %}
+
 {% block content %}
-<h1>Delete Dataitem</h1>
-<p>Are you sure you want to delete "{{ dataitem.name }}"?</p>
+<h1>Delete DataItem</h1>
+
+<p>Are you sure you want to delete
+  <strong>
+    "{{ dataitem.name|default:dataitem.external_id|default:dataitem.text|truncatechars:30 }}"
+  </strong>?
+</p>
+
 <form method="post">
   {% csrf_token %}
-  <button type="submit">Yes, delete</button>
+  <button type="submit" class="btn btn-danger">Yes, delete</button>
+  <a href="{% url 'dataitems:batch_detail' dataitem.batch.pk %}" class="btn btn-secondary">Cancel</a>
 </form>
-<a href="{% url 'dataitems:dataitem_detail' dataitem.pk %}">Cancel</a>
 {% endblock %}

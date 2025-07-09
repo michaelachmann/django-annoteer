@@ -155,6 +155,11 @@
               View Items
             </a>
           </td>
+            <td>
+        <a href="{% url 'projects:project_annotate' project.pk %}" class="btn btn-sm btn-success">
+  Annotate Items
+</a>
+        </td>
         </tr>
       {% endfor %}
     </tbody>

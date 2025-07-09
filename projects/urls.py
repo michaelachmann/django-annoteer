@@ -11,6 +11,8 @@ from .views import (
     label_edit,
     label_delete,
 
+    annotate_view,
+
 
 )
 
@@ -28,5 +30,6 @@ urlpatterns = [
 
     path("labels/<int:pk>/edit/", label_edit, name="label_edit"),
     path("labels/<int:pk>/delete/", label_delete, name="label_delete"),
+    path("<int:pk>/annotate/", annotate_view, name="project_annotate"),
 
 ]

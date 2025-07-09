@@ -160,6 +160,106 @@ def label_delete(request, pk):
         "label": label,
         "project": project,
     })
+def next_dataitem(project, user):
+    """
+    Returns the next DataItem:
+    - with less than project.num_annotators annotations
+    - not yet annotated by this user
+    """
+    return (
+        Dataitem.objects
+        .filter(project=project)
+        .annotate(
+            total=Count('annotations', distinct=True),
+            mine=Count(
+                'annotations',
+                filter=Q(annotations__annotator=user),
+                distinct=True
+            )
+        )
+        .filter(total__lt=project.num_annotators, mine=0)
+        .order_by('total', 'pk')
+        .first()
+    )
+
+
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.db.models import Count, Q
+from dataitem.models import Dataitem, Annotation, AnnotationLabel
+from .models import Project
+
+def next_dataitem(project, user):
+    return (
+        Dataitem.objects
+        .filter(project=project)
+        .annotate(
+            total=Count('annotations', distinct=True),
+            mine=Count(
+                'annotations',
+                filter=Q(annotations__annotator=user),
+                distinct=True
+            )
+        )
+        .filter(total__lt=project.num_annotators, mine=0)
+        .order_by('total', 'pk')
+        .first()
+    )
+
+@login_required
+def annotate_view(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    dataitem = next_dataitem(project, request.user)
+
+    # Count total needed annotations
+    total_items = Dataitem.objects.filter(project=project).count()
+    total_needed = total_items * project.num_annotators
+
+    # Count how many this user has done
+    annotated_by_user = Annotation.objects.filter(
+        dataitem__project=project,
+        annotator=request.user
+    ).count()
+
+    # Calculate progress percentage
+    progress_percent = (
+        (annotated_by_user / total_needed * 100)
+        if total_needed > 0 else 0
+    )
+
+    if not dataitem:
+        return render(request, "projects/annotate.html", {
+            "project": project,
+            "dataitem": None,
+            "total_needed": total_needed,
+            "annotated_by_user": annotated_by_user,
+            "progress_percent": progress_percent,
+        })
+
+    if request.method == "POST":
+        selected_labels = request.POST.getlist("labels")
+        if selected_labels:
+            annotation = Annotation.objects.create(
+                dataitem=dataitem,
+                annotator=request.user
+            )
+            for label_id in selected_labels:
+                AnnotationLabel.objects.create(
+                    annotation=annotation,
+                    label_id=label_id
+                )
+        return redirect("projects:project_annotate", pk=project.pk)
+
+    return render(request, "projects/annotate.html", {
+        "project": project,
+        "dataitem": dataitem,
+        "total_needed": total_needed,
+        "annotated_by_user": annotated_by_user,
+        "progress_percent": progress_percent,
+    })
+
 
 
 

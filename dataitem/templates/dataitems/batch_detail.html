@@ -12,6 +12,7 @@
       <th>External ID</th>
       <th>Text</th>
       <th>Created By</th>
+      <th>Annotations</th>
       <th>Actions</th>
     </tr>
   </thead>
@@ -22,10 +23,49 @@
         <td>{{ item.text|truncatechars:50 }}</td>
         <td>{{ item.created_by }}</td>
         <td>
-          <a href="{% url 'dataitems:dataitem_detail' item.pk %}" class="btn btn-sm btn-outline-primary">View</a>
+          {% if item.annotations.all %}
+            <ul class="mb-0 ps-3">
+              {% for annotation in item.annotations.all %}
+                <li>
+                  <strong>{{ annotation.annotator }}:</strong>
+                  {% if annotation.labels.all %}
+                    <ul>
+                      {% for label in annotation.labels.all %}
+                        <li>{{ label.label.label }}</li>
+                      {% endfor %}
+                    </ul>
+                  {% else %}
+                    <em>No labels.</em>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <em>No annotations yet.</em>
+          {% endif %}
         </td>
+        <td>
+  {% for annotation in item.annotations.all %}
+        <a href="{% url 'dataitems:annotation_edit' annotation.pk %}" class="btn btn-sm btn-outline-secondary">
+  Edit Annotation
+</a>
+      <a href="{% url 'dataitems:annotation_delete' annotation.pk %}" class="btn btn-sm btn-outline-danger">
+        Delete Annotation
+      </a>
+    </div>
+  {% endfor %}
+
+  <form action="{% url 'dataitems:dataitem_delete' item.pk %}" method="post" onsubmit="return confirm('Are you sure you want to delete this DataItem? This cannot be undone.')">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-sm btn-danger mt-2">
+      Delete DataItem
+    </button>
+  </form>
+</td>
       </tr>
     {% endfor %}
   </tbody>
 </table>
+
+<a href="{% url 'projects:project_detail' batch.project.pk %}" class="btn btn-secondary">Back to Project</a>
 {% endblock %}

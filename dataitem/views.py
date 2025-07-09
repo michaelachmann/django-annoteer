@@ -1,14 +1,15 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Dataitem
-from .forms import DataitemForm
-from .forms import DataImportForm
-from .models import Dataitem, DataBatch
+from django.http import HttpResponseBadRequest
+from django.contrib import messages
+
+from .models import Dataitem, DataBatch, Annotation, AnnotationLabel
+from .forms import DataitemForm, DataImportForm
 from projects.models import Project
+
 import csv
 from io import TextIOWrapper
-from django.contrib import messages
-from django.http import HttpResponseBadRequest
+
 
 def dataitem_list(request):
     dataitem = Dataitem.objects.all()
@@ -53,13 +54,7 @@ def dataitem_update(request, pk):
     return render(request, "dataitem/dataitem_form.html", {"form": form})
 
 
-@login_required
-def dataitem_delete(request, pk):
-    dataitem = get_object_or_404(Dataitem, pk=pk)
-    if request.method == "POST":
-        dataitem.delete()
-        return redirect("dataitem:dataitem_list")
-    return render(request, "dataitem/dataitem_confirm_delete.html", {"dataitem": dataitem})
+
 
 @login_required
 def data_import_view(request, project_pk):
@@ -131,10 +126,71 @@ def data_import_view(request, project_pk):
         "form": form
     })
 
-@login_required
 def batch_detail(request, pk):
     batch = get_object_or_404(DataBatch, pk=pk)
-    items = batch.dataitems.all()
-    return render(request, "dataitems/batch_detail.html", {"batch": batch, "dataitems": items})
+    dataitems = (
+        batch.dataitems
+        .prefetch_related(
+            "annotations__labels__label"
+        )
+        .all()
+    )
 
-print("=== Running import_csv ===")
+    return render(request, "dataitems/batch_detail.html", {
+        "batch": batch,
+        "dataitems": dataitems,
+    })
+@login_required
+def dataitem_delete(request, pk):
+    item = get_object_or_404(Dataitem, pk=pk)
+    project_id = item.project.pk
+    if request.method == "POST":
+        item.delete()
+        messages.success(request, "DataItem deleted.")
+        return redirect("projects:project_detail", pk=project_id)
+    return render(request, "dataitems/dataitem_confirm_delete.html", {"dataitem": item})
+
+@login_required
+def annotation_delete(request, pk):
+    annotation = get_object_or_404(Annotation, pk=pk)
+    dataitem = annotation.dataitem
+    if request.method == "POST":
+        annotation.delete()
+        messages.success(request, "Annotation deleted.")
+        return redirect("dataitems:batch_detail", pk=dataitem.batch.pk)
+    return render(request, "dataitems/annotation_confirm_delete.html", {"annotation": annotation})
+
+@login_required
+def annotation_edit(request, pk):
+    annotation = get_object_or_404(Annotation, pk=pk)
+    project = annotation.dataitem.project
+    dataitem = annotation.dataitem
+
+    # Get all labels for this project
+    all_labels = project.label_set.all()
+    # Get label IDs currently assigned to this annotation
+    selected_label_ids = annotation.labels.values_list("label_id", flat=True)
+
+    if request.method == "POST":
+        selected_labels = request.POST.getlist("labels")
+
+        # Remove old labels
+        annotation.labels.all().delete()
+
+        # Create new labels
+        for label_id in selected_labels:
+            AnnotationLabel.objects.create(
+                annotation=annotation,
+                label_id=label_id
+            )
+
+        messages.success(request, "Annotation updated.")
+        return redirect("dataitems:batch_detail", pk=dataitem.batch.pk)
+
+    return render(request, "dataitems/annotation_edit.html", {
+        "annotation": annotation,
+        "project": project,
+        "dataitem": dataitem,
+        "all_labels": all_labels,
+        "selected_label_ids": selected_label_ids,
+    })

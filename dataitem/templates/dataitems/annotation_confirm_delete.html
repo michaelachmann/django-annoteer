@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Anoteer | Delete Annotation
+{% endblock %}
+
+{% block content %}
+<h1>Delete Annotation</h1>
+
+<p>
+  Are you sure you want to delete this annotation by
+  <strong>{{ annotation.annotator }}</strong>
+  on DataItem
+  <strong>
+    "{{ annotation.dataitem.name|default:annotation.dataitem.external_id|default:annotation.dataitem.text|truncatechars:30 }}"
+  </strong>?
+</p>
+
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">Yes, delete</button>
+  <a href="{% url 'dataitems:batch_detail' annotation.dataitem.batch.pk %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

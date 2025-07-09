@@ -7,6 +7,9 @@ from .views import (
     dataitem_delete,
     data_import_view,
     batch_detail,
+    annotation_delete,
+    annotation_edit,
+
 )
 
 app_name = "dataitems"
@@ -19,5 +22,10 @@ urlpatterns = [
     path("<int:pk>/delete/", dataitem_delete, name="dataitem_delete"),
     path("<int:project_pk>/import/", data_import_view, name="data_import"),
     path("batch/<int:pk>/", batch_detail, name="batch_detail"),
+    path("annotation/<int:pk>/edit/", annotation_edit, name="annotation_edit"),
+
+    path("annotation/<int:pk>/delete/", annotation_delete, name="annotation_delete"),
+    path("dataitem/<int:pk>/delete/", dataitem_delete, name="dataitem_delete"),
+
 
 ]
