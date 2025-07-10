@@ -18,21 +18,22 @@ def dataitem_detail(request, pk):
     dataitem = get_object_or_404(Dataitem, pk=pk)
     return render(request, "dataitems/dataitem_detail.html", {"dataitem": dataitem})
 
-
-#@login_required
-#def dataitem_create(request):
-#    if request.method == "POST":
-#        form = DataitemForm(request.POST)
-#        if form.is_valid():
-#            dataitem = form.save(commit=False)
-#            dataitem.created_by = request.user
-            # Optionally set project here if applicable
-#            dataitem.save()
-#            return redirect("dataitems:dataitem_list")
-#    else:
-#        form = DataitemForm()
-#    return render(request, "dataitems/dataitem_form.html", {"form": form})
-
+'''
+@login_required
+create function no longer needed because of import-function
+def dataitem_create(request):
+    if request.method == "POST":
+        form = DataitemForm(request.POST)
+        if form.is_valid():
+            dataitem = form.save(commit=False)
+            dataitem.created_by = request.user
+             Optionally set project here if applicable
+            dataitem.save()
+            return redirect("dataitems:dataitem_list")
+    else:
+        form = DataitemForm()
+    return render(request, "dataitems/dataitem_form.html", {"form": form})
+'''
 
 
 @login_required()
