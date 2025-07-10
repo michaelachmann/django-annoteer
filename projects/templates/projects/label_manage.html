@@ -1,6 +1,4 @@
 {% extends "base.html" %}
-
-
 {% load static %}
 
 {% block content %}
@@ -13,7 +11,6 @@
 
       <div id="formset-container">
         {% for form in formset %}
-          <div class="formset-form border rounded p-3 mb-3">
           <div class="formset-form border rounded p-3 mb-3 position-relative">
             <h5 class="form-label">Label {{ forloop.counter }}</h5>
             <div class="mb-2">
@@ -23,9 +20,6 @@
               {{ form.value.label_tag }} {{ form.value }}
             </div>
             {% if form.DELETE %}
-              <div class="form-check">
-                {{ form.DELETE }} <label class="form-check-label">Entfernen</label>
-              </div>
                 {{ form.DELETE.as_hidden }}
                 <button type="button" class="btn-close position-absolute top-0 end-0 m-2 remove-form" aria-label="Entfernen"></button>
             {% endif %}
@@ -44,28 +38,6 @@
     </form>
   </div>
 {% endblock %}
-
-<script>
-  const addFormBtn = document.getElementById("add-form");
-  const formsetContainer = document.getElementById("formset-container");
-  const totalForms = document.getElementById("id_label_set-TOTAL_FORMS");
-
-  addFormBtn.addEventListener("click", function () {
-    const currentFormCount = parseInt(totalForms.value);
-    const newForm = formsetContainer.children[0].cloneNode(true);
-
-    // Leere Eingabefelder
-    newForm.querySelectorAll("input").forEach(input => {
-      if (input.type !== "hidden") input.value = "";
-    });
-
-    // IDs und Namen anpassen
-    newForm.innerHTML = newForm.innerHTML.replaceAll(`label_set-0`, `label_set-${currentFormCount}`);
-
-    formsetContainer.appendChild(newForm);
-    totalForms.value = currentFormCount + 1;
-  });
-</script>
 
 {% block extra_js %}
   <script src="{% static 'js/label_manage_v2.js' %}"></script>
