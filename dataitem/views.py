@@ -60,8 +60,8 @@ def dataitem_import(request, pk):
                 count_updated = 0
 
                 for row in reader:
-                    external_id = row['id']
-                    text = row['text']
+                    external_id = row['id'].strip()
+                    text = row['text'].strip()
                     if external_id in existing_ids:
                         Dataitem.objects.filter(external_id=external_id, project=project).update(text=text)
                         count_updated += 1
@@ -106,3 +106,5 @@ def dataitem_delete(request, pk):
         dataitem.delete()
         return redirect("dataitems:dataitem_list")
     return render(request, "dataitems/dataitem_confirm_delete.html", {"dataitem": dataitem})
+
+

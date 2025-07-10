@@ -11,7 +11,7 @@ class Dataitem(models.Model):
     text = models.TextField(blank=True)
 
 
-    external_id = models.CharField(max_length=100, unique=True)
+    external_id = models.CharField(max_length=100)
 
 
     created_at = models.DateTimeField(auto_now_add=True)
