@@ -95,7 +95,6 @@
         </a>
 
         {# If you have a DataitemCreateView that accepts a project pk, you could do: #}
-        <a href="{% url 'dataitems:dataitem_create' %}"
         <a href="{% url 'dataitems:dataitem_import' project.pk %}"
            class="btn btn-sm btn-primary ms-auto">
           <i class="bi bi-plus-lg"></i> New Data Item
@@ -135,6 +134,7 @@
             <tbody>
               {% for item in dataitems %}
                 <tr>
+<<<<<<< HEAD
                   <td>{{ item.name }}</td>
                   <td>{{ item.external_id }}</td>
                   <td>
@@ -142,10 +142,12 @@
                       {{ item.description|truncatechars:50 }}
                     {% if item.text %}
                       {{ item.text | truncatechars:50 }}
+=======
                   <td>{{ item.external_id }}</td>
                   <td>
                     {% if item.text %}
                       {{ item.text|truncatechars:50 }}
+>>>>>>> 04f89aec92420e915163098c9a89d5e711d373a7
                     {% else %}
                       <span class="text-muted fst-italic">–</span>
                     {% endif %}
@@ -175,9 +177,12 @@
       {% else %}
         <div class="alert alert-info">
           No Data Items found for this project.
+<<<<<<< HEAD
           <a href="{% url 'dataitems:dataitem_create' %}" class="alert-link">
           <a href="{% url 'dataitems:dataitem_import' project.pk %}" class="alert-link">
+=======
           <a href="{% url 'dataitems:dataitem_import' project.pk  %}" class="alert-link">
+>>>>>>> 04f89aec92420e915163098c9a89d5e711d373a7
             Create one now.
           </a>
         </div>
