@@ -53,7 +53,7 @@ def dataitem_import(request, pk):
                     form.add_error('file', 'CSV muss Spalten "id" und "text" enthalten.')
                     return render(request, 'dataitems/dataitem_import.html', {'form': form})
 
-                existing_ids = set(Dataitem.objects.values_list('external_id', flat=True))
+                existing_ids = set(Dataitem.objects.filter(project=project).values_list('external_id', flat=True))
 
                 items_to_create = []
                 count_created = 0
