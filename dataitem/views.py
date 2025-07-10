@@ -63,7 +63,7 @@ def dataitem_import(request, pk):
                     external_id = row['id']
                     text = row['text']
                     if external_id in existing_ids:
-                        Dataitem.objects.filter(external_id=external_id).update(text=text)
+                        Dataitem.objects.filter(external_id=external_id, project=project).update(text=text)
                         count_updated += 1
                     else:
                         items_to_create.append(Dataitem(
