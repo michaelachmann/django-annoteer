@@ -121,6 +121,8 @@
               <tr>
                 <th scope="col">Name</th>
                 <th scope="col">Description</th>
+                <th scope="col">ID</th>
+                <th scope="col">Text</th>
                 <th scope="col">Created By</th>
                 <th scope="col">Created At</th>
                 <th scope="col" class="text-end">Actions</th>
@@ -130,9 +132,12 @@
               {% for item in dataitems %}
                 <tr>
                   <td>{{ item.name }}</td>
+                  <td>{{ item.external_id }}</td>
                   <td>
                     {% if item.description %}
                       {{ item.description|truncatechars:50 }}
+                    {% if item.text %}
+                      {{ item.text | truncatechars:50 }}
                     {% else %}
                       <span class="text-muted fst-italic">–</span>
                     {% endif %}
@@ -163,6 +168,7 @@
         <div class="alert alert-info">
           No Data Items found for this project.
           <a href="{% url 'dataitems:dataitem_create' %}" class="alert-link">
+          <a href="{% url 'dataitems:dataitem_import' project.pk %}" class="alert-link">
             Create one now.
           </a>
         </div>
