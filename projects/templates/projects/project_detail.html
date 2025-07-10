@@ -95,7 +95,7 @@
         </a>
 
         {# If you have a DataitemCreateView that accepts a project pk, you could do: #}
-        <a href="{% url 'dataitems:dataitem_create' %}"
+        <a href="{% url 'dataitems:dataitem_import' project.pk %}"
            class="btn btn-sm btn-primary ms-auto">
           <i class="bi bi-plus-lg"></i> New Data Item
         </a>
@@ -119,8 +119,8 @@
           <table class="table table-striped align-middle">
             <thead class="table-light">
               <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Description</th>
+                <th scope="col">ID</th>
+                <th scope="col">Text</th>
                 <th scope="col">Created By</th>
                 <th scope="col">Created At</th>
                 <th scope="col" class="text-end">Actions</th>
@@ -129,10 +129,10 @@
             <tbody>
               {% for item in dataitems %}
                 <tr>
-                  <td>{{ item.name }}</td>
+                  <td>{{ item.external_id }}</td>
                   <td>
-                    {% if item.description %}
-                      {{ item.description|truncatechars:50 }}
+                    {% if item.text %}
+                      {{ item.text|truncatechars:50 }}
                     {% else %}
                       <span class="text-muted fst-italic">–</span>
                     {% endif %}
@@ -162,7 +162,7 @@
       {% else %}
         <div class="alert alert-info">
           No Data Items found for this project.
-          <a href="{% url 'dataitems:dataitem_create' %}" class="alert-link">
+          <a href="{% url 'dataitems:dataitem_import' project.pk  %}" class="alert-link">
             Create one now.
           </a>
         </div>

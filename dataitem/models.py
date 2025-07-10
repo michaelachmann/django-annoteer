@@ -10,15 +10,17 @@ class Dataitem(models.Model):
     description = models.TextField(blank=True)
     text = models.TextField(blank=True)
 
+
+    external_id = models.CharField(max_length=100, unique=True)
+
+
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name
+        return f"{self.external_id}: {self.text}"
 
 
-class DataEntry(models.Model):
-    external_id = models.CharField(max_length=100, unique=True)
-    text = models.TextField()
+
