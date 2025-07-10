@@ -15,5 +15,9 @@ urlpatterns = [
     path("create/", project_create, name="project_create"),
     path("<int:pk>/update/", project_update, name="project_update"),
     path("<int:pk>/delete/", project_delete, name="project_delete"),
+<<<<<<< Updated upstream
     path("<int:pk>/label/", label_manage, name="label_manage"),
+=======
+    path("<int:pk>/label/", label_manage, name="label_manage")
+>>>>>>> Stashed changes
 ]
