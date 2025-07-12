@@ -5,8 +5,8 @@ from projects.models import Label
 
 
 class Annotation(models.Model):
-    annotated_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    dataitem = models.ForeignKey(Dataitem, on_delete=models.CASCADE)
+    annotated_by = models.ForeignKey(User, related_name="annotations", on_delete=models.CASCADE)
+    dataitem = models.ForeignKey(Dataitem, related_name="annotations" , on_delete=models.CASCADE)
 
     last_modified_by = models.ForeignKey(
         User,

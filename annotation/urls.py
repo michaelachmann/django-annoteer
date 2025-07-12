@@ -5,6 +5,7 @@ from .views import (
     annotation_create,
     annotation_update,
     annotation_delete,
+    annotate_view
 )
 
 app_name = "annotation"
@@ -15,4 +16,5 @@ urlpatterns = [
     path("create/", annotation_create, name="annotation_create"),
     path("<int:pk>/update/", annotation_update, name="annotation_update"),
     path("<int:pk>/delete/", annotation_delete, name="annotation_delete"),
+    path("<int:pk>/annotate/", annotate_view, name="annotate"),
 ]

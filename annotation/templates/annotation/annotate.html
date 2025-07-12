@@ -1,0 +1,49 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Annotation</title>
+</head>
+<body>
+    <h2>Projekt: {{ project.name }}</h2>
+
+
+    <div>
+        <h3>Instructions</h3>
+        <div style="border:1px solid #ccc; padding:10px;">
+            {{ project.instructions|linebreaks }}
+        </div>
+    </div>
+
+
+    <div>
+        <h3>Text</h3>
+        <p>{{ dataitem.text }}</p>
+    </div>
+
+
+    <form method="post">
+        {% csrf_token %}
+
+        <h3>Labels:</h3>
+        {% if project.label_type == "SI" %}
+            {% for label in project.label_set.all %}
+                <label>
+                    <input type="radio" name="label" value="{{ label.pk }}">
+                    {{ label.name }}
+                </label><br>
+            {% endfor %}
+        {% elif project.label_type == "MU" %}
+            {% for label in project.label_set.all %}
+                <label>
+                    <input type="checkbox" name="labels" value="{{ label.pk }}">
+                    {{ label.name }}
+                </label><br>
+            {% endfor %}
+        {% endif %}
+
+        <button type="submit">Save</button>
+    </form>
+</body>
+</html>
