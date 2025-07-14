@@ -19,10 +19,8 @@
             <div class="mb-2">
               {{ form.value.label_tag }} {{ form.value }}
             </div>
-            {% if form.DELETE %}
-                {{ form.DELETE.as_hidden }}
-                <button type="button" class="btn-close position-absolute top-0 end-0 m-2 remove-form" aria-label="Entfernen"></button>
-            {% endif %}
+            {{ form.DELETE.as_hidden }}
+            <button type="button" class="btn-close position-absolute top-0 end-0 m-2 remove-form" aria-label="Entfernen"></button>
           </div>
         {% endfor %}
       </div>

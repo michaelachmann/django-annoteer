@@ -1,80 +1,74 @@
 {% extends "base.html" %}
-
 {% load markdownify %}
-{{ project.instructions|markdownify }}
-
-
 
 {% block title %}
   Anoteer | {{ project.name }}
 {% endblock %}
 
-
-
 {% block content %}
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10">
 
-      <!-- ── Project Header  ────────────────────────────────── -->
+      <!-- ── Project Header ────────────────────────────────── -->
       <div class="mb-4">
         <h1 class="fw-bold">{{ project.name }}</h1>
       </div>
-      <!-- ── Project Details Table  ─────────────────────────── -->
+
+      <!-- ── Project Details Table ─────────────────────────── -->
       <div class="mb-4">
-          <h2 class="h5">Project Details</h2>
-          <table class="table table-bordered">
-              <tbody>
-                <tr>
-                    <th scope="row">Description</th>
-                    <td>
-                        {% if project.description %}
-                            {{ project.description|markdownify|safe }}
-                        {% else %}
-                            <span class="text-muted fst-italic">No description provided</span>
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                  <th scope="row">Created by</th>
-                  <td>
-                    {{ project.created_by }} on {{ project.created_at|date:"M d, Y" }}
-                  </td>
-                </tr>
-                <tr>
-                    <th scope="row">Instruction</th>
-                    <td>
-                      {% if project.instruction %}
-                        {{ project.instruction|markdownify|safe }}
-                      {% else %}
-                        <span class="text-muted fst-italic">No instructions provided.</span>
-                      {% endif %}
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Label Type</th>
-                    <td>{{ project.get_label_type_display }}</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Number of Annotators</th>
-                    <td>{{ project.num_annotators }}</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Labels</th>
-                    <td>
-                      {% if project.label_set.all %}
-                        <ul class="mb-0">
-                          {% for label in project.label_set.all %}
-                            <li><strong>{{ label.label }}</strong> ({{ label.value }})</li>
-                          {% endfor %}
-                        </ul>
-                      {% else %}
-                        <span class="text-muted fst-italic">No labels defined.</span>
-                      {% endif %}
-                    </td>
-                  </tr>
-                </tr>
-              </tbody>
-          </table>
+        <h2 class="h5">Project Details</h2>
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <th scope="row">Description</th>
+              <td>
+                {% if project.description %}
+                  {{ project.description|markdownify|safe }}
+                {% else %}
+                  <span class="text-muted fst-italic">No description provided</span>
+                {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Created by</th>
+              <td>
+                {{ project.created_by }} on {{ project.created_at|date:"M d, Y" }}
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Instruction</th>
+              <td>
+                {% if project.instruction %}
+                  {{ project.instruction|markdownify|safe }}
+                {% else %}
+                  <span class="text-muted fst-italic">No instructions provided.</span>
+                {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Label Type</th>
+              <td>{{ project.get_label_type_display }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Number of Annotators</th>
+              <td>{{ project.num_annotators }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Labels</th>
+              <td>
+                {% if project.label_set.all %}
+                  <ul class="mb-0">
+                    {% for label in project.label_set.all %}
+                      <li><strong>{{ label.label }}</strong> ({{ label.value }})</li>
+                    {% endfor %}
+                  </ul>
+                {% else %}
+                  <span class="text-muted fst-italic">No labels defined.</span>
+                {% endif %}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <!-- ── Action Buttons Toolbar ────────────────────────────────────────────── -->
@@ -89,23 +83,25 @@
           <i class="bi bi-trash"></i> Delete
         </a>
 
+        <a href="{% url 'projects:label_manage' project.pk %}"
+           class="btn btn-sm btn-outline-warning">
+          <i class="bi bi-tags"></i> Edit Labels
+        </a>
+
         <a href="{% url 'projects:project_list' %}"
            class="btn btn-sm btn-outline-secondary">
           <i class="bi bi-arrow-left"></i> Back
         </a>
 
-        {# If you have a DataitemCreateView that accepts a project pk, you could do: #}
         <a href="{% url 'dataitems:dataitem_import' project.pk %}"
            class="btn btn-sm btn-primary ms-auto">
           <i class="bi bi-plus-lg"></i> New Data Item
         </a>
 
-          <a href="{% url 'annotation:annotate' project.pk %}"
-             class="btn btn-sm btn-success">
-              <i class="bi bi-pencil-square"></i> Annotate
-          </a>
-
-
+        <a href="{% url 'annotation:annotate' project.pk %}"
+           class="btn btn-sm btn-success">
+          <i class="bi bi-pencil-square"></i> Annotate
+        </a>
       </div>
 
       <!-- ── Divider ────────────────────────────────────────────────────────────── -->
@@ -142,7 +138,6 @@
                   <td>{{ item.created_by }}</td>
                   <td>{{ item.created_at|date:"M d, Y" }}</td>
                   <td class="text-end">
-                    {# Adjust these URL names if your Dataitem app uses different names #}
                     <a href="{% url 'dataitems:dataitem_detail' item.pk %}"
                        class="btn btn-sm btn-outline-primary me-1">
                       <i class="bi bi-eye"></i>
