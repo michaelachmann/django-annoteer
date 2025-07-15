@@ -1,4 +1,6 @@
+{% extends "base.html" %}
 
+{% block content %}
 {% load static %}
 <!DOCTYPE html>
 <html>
@@ -31,14 +33,14 @@
             {% for label in project.label_set.all %}
                 <label>
                     <input type="radio" name="label" value="{{ label.pk }}">
-                    {{ label.name }}
+                    {{ label.value }}
                 </label><br>
             {% endfor %}
         {% elif project.label_type == "MU" %}
             {% for label in project.label_set.all %}
                 <label>
                     <input type="checkbox" name="labels" value="{{ label.pk }}">
-                    {{ label.name }}
+                    {{ label.value }}
                 </label><br>
             {% endfor %}
         {% endif %}
@@ -46,4 +48,6 @@
         <button type="submit">Save</button>
     </form>
 </body>
+
 </html>
+{% endblock %}
