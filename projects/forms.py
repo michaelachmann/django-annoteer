@@ -37,7 +37,7 @@ class ProjectForm(forms.ModelForm):
 class LabelForm(forms.ModelForm):
     class Meta:
         model = Label
-        fields = ["label", "value"]
+        fields = ["label", "value", "id"]
         widgets = {
             "label": forms.TextInput(attrs={
                 "class": "form-control",
@@ -46,5 +46,6 @@ class LabelForm(forms.ModelForm):
             "value": forms.TextInput(attrs={
                 "class": "form-control",
                 "placeholder": "z. B. POS"
-            })
+            }),
+            "id": forms.HiddenInput(),
         }

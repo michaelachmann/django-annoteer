@@ -75,10 +75,12 @@ def label_manage(request, pk):
         can_delete=True
     )
 
-    formset = LabelFormSet(request.POST or None, instance=project)
+
 
     if request.method == "POST":
+        formset = LabelFormSet(request.POST or None, instance=project)
         print("POST erhalten:", request.POST)
+        print(formset.errors)
         if formset.is_valid():
             for form in formset:
                 print("DELETE?", form.cleaned_data.get("DELETE"),
@@ -86,6 +88,8 @@ def label_manage(request, pk):
                       "| Value:", form.cleaned_data.get("value"))
             formset.save()
             return redirect("projects:project_detail", pk=project.pk)
+    else:
+        formset = LabelFormSet(instance=project)
 
     return render(request, "projects/label_manage.html", {
         "project": project,
