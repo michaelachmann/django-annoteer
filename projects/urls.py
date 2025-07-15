@@ -6,7 +6,7 @@ from .views import (
     project_update,
     project_delete,
     project_instructions,
-
+    project_export,
     label_management,
     label_edit,
     label_delete,
@@ -31,5 +31,6 @@ urlpatterns = [
     path("labels/<int:pk>/edit/", label_edit, name="label_edit"),
     path("labels/<int:pk>/delete/", label_delete, name="label_delete"),
     path("<int:pk>/annotate/", annotate_view, name="project_annotate"),
+    path("<int:pk>/export/", project_export, name="project_export"),
 
 ]

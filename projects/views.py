@@ -1,25 +1,23 @@
-# projects/views.py
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.db import IntegrityError
-from django.contrib import messages
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
-from django.forms import inlineformset_factory
-from dataitem.models import Dataitem
-from .models import Project, Label
-from django.contrib.auth.decorators import login_required
-from .forms import ProjectForm, LabelForm
 from django.db.models import Count, Q
-from dataitem.models import Dataitem
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib import messages
 from django.utils import timezone
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponse, HttpResponseForbidden
+from django.forms import inlineformset_factory
+
+from .models import Project, Label
+from .forms import ProjectForm, LabelForm
+
+from dataitem.models import Dataitem, DataBatch
+
 import csv
 from io import TextIOWrapper
 
-from .models import Project
-from dataitem.models import DataBatch
 def project_list(request):
     projects = Project.objects.filter(created_by=request.user)
     return render(request, "projects/project_list.html", {"projects": projects})
@@ -259,6 +257,65 @@ def annotate_view(request, pk):
         "annotated_by_user": annotated_by_user,
         "progress_percent": progress_percent,
     })
+
+@login_required
+def project_export(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+
+    # Permission check
+    if request.user != project.created_by:
+        return HttpResponseForbidden("You do not have permission to export this project's annotations.")
+
+
+    # Get all annotators
+    annotators = User.objects.filter(
+        annotation__dataitem__project=project
+    ).distinct().order_by("username")
+
+    # Prepare CSV response
+    response = HttpResponse(content_type="text/csv; charset=utf-8")
+    response.write("\ufeff")  # Write UTF-8 BOM for Excel compatibility
+
+
+    response["Content-Disposition"] = f'attachment; filename="project_{project.pk}_annotations.csv"'
+
+    writer = csv.writer(response)
+    header = ["external_id", "text"] + [user.username for user in annotators]
+    writer.writerow(header)
+
+    #for testing only:
+    # Get all DataItems in the project
+    dataitems = Dataitem.objects.filter(project=project).prefetch_related(
+        "annotations__labels__label",
+        "annotations__annotator"
+    )
+    for item in dataitems:
+        row = [item.external_id, item.text]
+
+        for user in annotators:
+            # Get the annotation by this user, if any
+            annotation = next(
+                (a for a in item.annotations.all() if a.annotator_id == user.id),
+                None
+            )
+
+            if annotation:
+                # Get label values
+                label_values = [l.label.value for l in annotation.labels.all()]
+                if project.label_type == "SI":
+                    value = label_values[0] if label_values else ""
+                else:
+                    value = ";".join(label_values)
+            else:
+                value = ""
+
+            row.append(value)
+
+        writer.writerow(row)
+
+    return response
+
+
 
 
 

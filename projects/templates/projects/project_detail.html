@@ -151,15 +151,19 @@
           <td>{{ batch.uploaded_at|date:"M d, Y" }}</td>
           <td>{{ batch.dataitems.count }}</td>
           <td>
-            <a href="{% url 'dataitems:batch_detail' batch.pk %}" class="btn btn-sm btn-primary">
-              View Items
-            </a>
-          </td>
-            <td>
-        <a href="{% url 'projects:project_annotate' project.pk %}" class="btn btn-sm btn-success">
-  Annotate Items
-</a>
-        </td>
+  <a href="{% url 'dataitems:batch_detail' batch.pk %}" class="btn btn-sm btn-primary">
+    View Items
+  </a>
+  <a href="{% url 'projects:project_annotate' project.pk %}" class="btn btn-sm btn-success ms-1">
+    Annotate Items
+  </a>
+  {% if request.user == project.created_by %}
+    <a href="{% url 'projects:project_export' project.pk %}" class="btn btn-sm btn-outline-success ms-1">
+      <i class="bi bi-download"></i> Export CSV
+    </a>
+  {% endif %}
+</td>
+
         </tr>
       {% endfor %}
     </tbody>
