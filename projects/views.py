@@ -71,7 +71,7 @@ def label_manage(request, pk):
         Label,
         form=LabelForm,
         fields=("label", "value"),
-        extra=1,
+        extra=0,
         can_delete=True
     )
 

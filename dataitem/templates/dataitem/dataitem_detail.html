@@ -9,7 +9,7 @@
         <p class="text-muted">
             Uploaded by {{ dataitem.created_by }} on {{ dataitem.created_at|date:"Y-m-d H:i" }}
         </p>
-        <p class="card-text">{{ dataitem.description }}</p>
+        <p class="card-text">{{ dataitems.description }}</p>
 
         {% if dataitem.uploaded_file %}
             <a href="{{ dataitem.uploaded_file.url }}" class="btn btn-primary" download>
