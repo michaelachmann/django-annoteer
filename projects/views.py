@@ -269,8 +269,10 @@ def project_export(request, pk):
 
     # Get all annotators
     annotators = User.objects.filter(
-        annotation__dataitem__project=project
+        annotations__dataitem__project=project
     ).distinct().order_by("username")
+
+
 
     # Prepare CSV response
     response = HttpResponse(content_type="text/csv; charset=utf-8")
