@@ -110,7 +110,7 @@ def annotate_view(request, pk):
                         annotation=annotation,
                         label=label,
                     )
-            return redirect("annotaion:annotate", pk=project.pk)
+            return redirect("annotation:annotate", pk=project.pk)
         else:
             form = AnnotationForm(request.POST)
 
