@@ -76,7 +76,7 @@ def annotate_view(request, pk):
 
     existing_annotation = Annotation.objects.filter(dataitem=dataitem, annotated_by=request.user).first()
     if existing_annotation:
-        return redirect("annotate", pk=project.pk)
+        return redirect("annotation:annotate", pk=project.pk)
 
     if request.method == "POST":
         if project.label_type == "SI":
@@ -84,15 +84,15 @@ def annotate_view(request, pk):
             if label_id:
                 label = get_object_or_404(Label, pk=label_id)
                 annotation = Annotation.objects.create(
-                    project=project,
                     dataitem=dataitem,
                     annotated_by=request.user,
+                    last_modified_by=request.user,
                 )
                 AnnotationLabel.objects.create(
                     annotation=annotation,
                     label=label,
                 )
-                return redirect("annotate", pk=project.pk)
+                return redirect("annotation:annotate", pk=project.pk)
             else:
                 form = AnnotationForm(request.POST)
 
@@ -100,9 +100,9 @@ def annotate_view(request, pk):
             label_ids = request.POST.getlist("labels")
             if label_ids:
                 annotation = Annotation.objects.create(
-                    project=project,
                     dataitem=dataitem,
                     annotated_by=request.user,
+                    last_modified_by=request.user,
                 )
                 for label_id in label_ids:
                     label = get_object_or_404(Label, pk=label_id)
@@ -110,7 +110,7 @@ def annotate_view(request, pk):
                         annotation=annotation,
                         label=label,
                     )
-            return redirect("annotate", pk=project.pk)
+            return redirect("annotaion:annotate", pk=project.pk)
         else:
             form = AnnotationForm(request.POST)
 
