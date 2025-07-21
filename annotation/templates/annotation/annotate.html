@@ -10,6 +10,7 @@
 <body>
     <h2>Projekt: {{ project.name }}</h2>
 
+    <p>Du hast {{ annotated_by_user }} / {{ total_dataitems }} verpflichtende Annotationen erledigt.</p>
 
     <div>
         <h3>Instructions</h3>
@@ -46,6 +47,7 @@
         {% endif %}
 
         <button type="submit">Save</button>
+        <!--button type="button" onclick="window.history.back();">Back</button-->
     </form>
 </body>
 

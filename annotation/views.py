@@ -71,6 +71,20 @@ def annotate_view(request, pk):
     project = get_object_or_404(Project, pk=pk, created_by=request.user)
     dataitem = next_dataitem(project, request.user)
 
+    dataitems = Dataitem.objects.filter(project=project)
+    total_dataitems = dataitems.count()
+
+    annotated_by_user = Annotation.objects.filter(
+        dataitem__project=project,
+        annotated_by=request.user
+    ).count()
+
+    num_annotators = project.num_annotators
+
+    #annotated_by_user = Annotation.objects.filter(pk = project.pk, annotated_by=request.user).count()
+
+    #total_needed = total_dataitems * num_annotators
+
     if not dataitem:
         return render(request, "annotation/annotation_all_done.html", {"project": project})
 
@@ -110,7 +124,7 @@ def annotate_view(request, pk):
                         annotation=annotation,
                         label=label,
                     )
-            return redirect("annotaion:annotate", pk=project.pk)
+            return redirect("annotation:annotate", pk=project.pk)
         else:
             form = AnnotationForm(request.POST)
 
@@ -120,5 +134,7 @@ def annotate_view(request, pk):
     return render(request, "annotation/annotate.html", {
         "form": form,
         "dataitem": dataitem,
-        "project": project
+        "project": project,
+        "total_dataitems": total_dataitems,
+        "annotated_by_user": annotated_by_user,
     })
