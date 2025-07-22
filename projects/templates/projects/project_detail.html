@@ -104,6 +104,12 @@
            class="btn btn-sm btn-success">
           <i class="bi bi-pencil-square"></i> Annotate
         </a>
+
+        <a href="{% url 'projects:project_export' project.pk %}"
+           class="btn btn-sm btn-warning">
+           <i class="bi bi-download"></i> Export as CSV
+        </a>
+
       </div>
 
       <!-- ── Divider ────────────────────────────────────────────────────────────── -->
