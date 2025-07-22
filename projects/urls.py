@@ -18,6 +18,6 @@ urlpatterns = [
 
     path("<int:pk>/label/", label_manage, name="label_manage"),
 
-    path("<int:pk>/label/", label_manage, name="label_manage")
+    path("<int:pk>/export/", project_export, name="project_export")
 
 ]
