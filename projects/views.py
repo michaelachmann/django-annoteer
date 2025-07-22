@@ -95,3 +95,9 @@ def label_manage(request, pk):
         "project": project,
         "formset": formset
     })
+
+#Projekt exportieren
+@login_required
+def project_export(request, pk):
+    projects = Project.objects.filter(created_by=request.user)
+    project = get_object_or_404(Project, pk=pk)
