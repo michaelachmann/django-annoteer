@@ -151,18 +151,25 @@
           <td>{{ batch.uploaded_at|date:"M d, Y" }}</td>
           <td>{{ batch.dataitems.count }}</td>
           <td>
-  <a href="{% url 'dataitems:batch_detail' batch.pk %}" class="btn btn-sm btn-primary">
-    View Items
-  </a>
-  <a href="{% url 'projects:project_annotate' project.pk %}" class="btn btn-sm btn-success ms-1">
-    Annotate Items
-  </a>
-  {% if request.user == project.created_by %}
-    <a href="{% url 'projects:project_export' project.pk %}" class="btn btn-sm btn-outline-success ms-1">
-      <i class="bi bi-download"></i> Export CSV
+  <div class="d-flex flex-wrap gap-1">
+    <a href="{% url 'dataitems:batch_detail' batch.pk %}" class="btn btn-sm btn-primary">
+      View Items
     </a>
-  {% endif %}
+    <a href="{% url 'projects:project_annotate' project.pk %}" class="btn btn-sm btn-success">
+      Annotate Items
+    </a>
+    {% if request.user == project.created_by %}
+      <a href="{% url 'projects:project_export' project.pk %}" class="btn btn-sm btn-outline-success">
+        <i class="bi bi-download"></i> Export CSV
+      </a>
+      <a href="{% url 'dataitems:batch_delete' batch.pk %}" class="btn btn-sm btn-danger"
+         onclick="return confirm('Are you sure you want to delete this batch?');">
+        <i class="bi bi-trash"></i> Delete Batch
+      </a>
+    {% endif %}
+  </div>
 </td>
+
 
         </tr>
       {% endfor %}

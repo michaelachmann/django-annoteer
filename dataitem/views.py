@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, HttpResponseForbidden
 from django.contrib import messages
 
 from .models import Dataitem, DataBatch, Annotation, AnnotationLabel
@@ -143,12 +143,17 @@ def batch_detail(request, pk):
 @login_required
 def dataitem_delete(request, pk):
     item = get_object_or_404(Dataitem, pk=pk)
-    project_id = item.project.pk
+    next_url = request.GET.get("next") or reverse("projects:project_detail", args=[item.project.pk])
+
     if request.method == "POST":
         item.delete()
         messages.success(request, "DataItem deleted.")
-        return redirect("projects:project_detail", pk=project_id)
-    return render(request, "dataitems/dataitem_confirm_delete.html", {"dataitem": item})
+        return redirect(next_url)
+
+    return render(request, "dataitems/dataitem_confirm_delete.html", {
+        "dataitem": item,
+        "next": next_url
+    })
 
 @login_required
 def annotation_delete(request, pk):
@@ -193,4 +198,19 @@ def annotation_edit(request, pk):
         "dataitem": dataitem,
         "all_labels": all_labels,
         "selected_label_ids": selected_label_ids,
+    })
+@login_required
+def batch_delete(request, pk):
+    batch = get_object_or_404(DataBatch, pk=pk)
+    project = batch.project
+
+    if request.user != project.created_by:
+        return HttpResponseForbidden("You are not allowed to delete this batch.")
+
+    if request.method == "POST":
+        batch.delete()
+        return redirect("projects:project_detail", pk=project.pk)
+
+    return render(request, "dataitems/batch_confirm_delete.html", {
+        "batch": batch
     })

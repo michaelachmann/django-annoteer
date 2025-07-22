@@ -13,9 +13,9 @@
   </strong>?
 </p>
 
-<form method="post">
+<form method="post" action="?next={{ next|urlencode }}">
   {% csrf_token %}
   <button type="submit" class="btn btn-danger">Yes, delete</button>
-  <a href="{% url 'dataitems:batch_detail' dataitem.batch.pk %}" class="btn btn-secondary">Cancel</a>
+  <a href="{{ next }}" class="btn btn-secondary">Cancel</a>
 </form>
 {% endblock %}

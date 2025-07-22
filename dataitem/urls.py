@@ -9,6 +9,7 @@ from .views import (
     batch_detail,
     annotation_delete,
     annotation_edit,
+    batch_delete,
 
 )
 
@@ -26,6 +27,8 @@ urlpatterns = [
 
     path("annotation/<int:pk>/delete/", annotation_delete, name="annotation_delete"),
     path("dataitem/<int:pk>/delete/", dataitem_delete, name="dataitem_delete"),
+    path('batch/<int:pk>/delete/', batch_delete, name='batch_delete'),
+
 
 
 ]

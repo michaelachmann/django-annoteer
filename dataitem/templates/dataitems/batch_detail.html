@@ -55,7 +55,7 @@
     </div>
   {% endfor %}
 
-  <form action="{% url 'dataitems:dataitem_delete' item.pk %}" method="post" onsubmit="return confirm('Are you sure you want to delete this DataItem? This cannot be undone.')">
+  <form action="{% url 'dataitems:dataitem_delete' item.pk %}?next={% url 'dataitems:batch_detail' batch.pk %}" method="post" onsubmit="return confirm('Are you sure you want to delete this DataItem? This cannot be undone.')">
     {% csrf_token %}
     <button type="submit" class="btn btn-sm btn-danger mt-2">
       Delete DataItem

@@ -209,17 +209,43 @@ def next_dataitem(project, user):
 @login_required
 def annotate_view(request, pk):
     project = get_object_or_404(Project, pk=pk)
-    dataitem = next_dataitem(project, request.user)
+
+    # Optional: restrict to specific batch
+    batch_id = request.GET.get("batch")
+    batch = None
+
+    if batch_id:
+        batch = get_object_or_404(DataBatch, pk=batch_id, project=project)
+        dataitem = (
+            Dataitem.objects
+            .filter(project=project, batch=batch)
+            .annotate(
+                total=Count("annotations", distinct=True),
+                mine=Count("annotations", filter=Q(annotations__annotator=request.user), distinct=True)
+            )
+            .filter(total__lt=project.num_annotators, mine=0)
+            .order_by("total", "pk")
+            .first()
+        )
+    else:
+        dataitem = next_dataitem(project, request.user)
 
     # Count total needed annotations
-    total_items = Dataitem.objects.filter(project=project).count()
-    total_needed = total_items * project.num_annotators
+    if batch:
+        total_items = Dataitem.objects.filter(project=project, batch=batch).count()
+        annotated_by_user = Annotation.objects.filter(
+            dataitem__project=project,
+            dataitem__batch=batch,
+            annotator=request.user
+        ).count()
+    else:
+        total_items = Dataitem.objects.filter(project=project).count()
+        annotated_by_user = Annotation.objects.filter(
+            dataitem__project=project,
+            annotator=request.user
+        ).count()
 
-    # Count how many this user has done
-    annotated_by_user = Annotation.objects.filter(
-        dataitem__project=project,
-        annotator=request.user
-    ).count()
+    total_needed = total_items * project.num_annotators
 
     # Calculate progress percentage
     progress_percent = (
@@ -234,6 +260,7 @@ def annotate_view(request, pk):
             "total_needed": total_needed,
             "annotated_by_user": annotated_by_user,
             "progress_percent": progress_percent,
+            "batch": batch,
         })
 
     if request.method == "POST":
@@ -256,6 +283,7 @@ def annotate_view(request, pk):
         "total_needed": total_needed,
         "annotated_by_user": annotated_by_user,
         "progress_percent": progress_percent,
+        "batch": batch,
     })
 
 @login_required
