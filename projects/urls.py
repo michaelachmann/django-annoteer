@@ -5,6 +5,7 @@ from .views import (
     project_create,
     project_update,
     project_delete, label_manage,
+    project_export
 )
 
 app_name = "projects"
