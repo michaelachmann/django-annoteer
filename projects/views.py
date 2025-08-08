@@ -7,8 +7,14 @@ from .models import Project, Label
 from django.contrib.auth.decorators import login_required
 from .forms import ProjectForm, LabelForm
 from django.forms import inlineformset_factory
+from annotation.models import Annotation, AnnotationLabel
+from django.contrib.auth.models import User
+from django.http import HttpResponse
+import csv
 
 # Projektliste
+
+@login_required()
 def project_list(request):
     projects = Project.objects.filter(created_by=request.user)
     return render(request, "projects/project_list.html", {"projects": projects})
@@ -39,7 +45,6 @@ def project_create(request):
 # Projekt aktualisieren
 @login_required
 def project_update(request, pk):
-    projects = Project.objects.filter(created_by=request.user)
     project = get_object_or_404(Project, pk=pk)
     form = ProjectForm(request.POST or None, instance=project)
     if form.is_valid():
@@ -52,8 +57,7 @@ def project_update(request, pk):
 # Projekt löschen
 @login_required
 def project_delete(request, pk):
-    projects = Project.objects.filter(created_by=request.user)
-    project = get_object_or_404(Project, pk=pk)
+    project = get_object_or_404(Project, pk=pk, created_by=request.user)
     if request.method == "POST":
         project.delete()
         return redirect("projects:project_list")
@@ -99,5 +103,38 @@ def label_manage(request, pk):
 #Projekt exportieren
 @login_required
 def project_export(request, pk):
-    projects = Project.objects.filter(created_by=request.user)
     project = get_object_or_404(Project, pk=pk)
+    if project.created_by != request.user:
+        return HttpResponse("Access denied", status=403)
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename="project_{project.pk}_annotations.csv"'
+
+    writer = csv.writer(response)
+
+    # all annotators
+    annotators = User.objects.filter(annotations__dataitem__project=project).distinct()
+    annotator_usernames = [user.username for user in annotators]
+
+    # header
+    header = ['external_id', 'text'] + annotator_usernames
+    writer.writerow(header)
+
+    dataitems = Dataitem.objects.filter(project=project)
+    for item in dataitems:
+        row = [item.external_id, item.text]
+
+        for user in annotators:
+            annotation = Annotation.objects.filter(dataitem= item, annotated_by=user).first()
+
+            if annotation:
+                labels = AnnotationLabel.objects.filter(annotation=annotation).values_list("label__value", flat=True)
+                label_str = ";".join(labels) if project.label_type == "MU" else (labels[0] if labels else "")
+            else:
+                label_str = ""
+
+            row.append(label_str)
+
+        writer.writerow(row)
+
+    return response
