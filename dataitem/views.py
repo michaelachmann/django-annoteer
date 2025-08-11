@@ -106,6 +106,6 @@ def dataitem_delete(request, pk):
     if request.method == "POST":
         dataitem.delete()
         return redirect("dataitems:dataitem_list")
-    return render(request, "dataitems/dataitem_confirm_delete.html", {"dataitem": dataitem})
+    return render(request, "dataitems/dataitem_confirm_delete.html", {"dataitem": dataitem, 'project': dataitem.project})
 
 

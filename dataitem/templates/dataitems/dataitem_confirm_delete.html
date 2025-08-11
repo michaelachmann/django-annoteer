@@ -10,5 +10,5 @@
   {% csrf_token %}
   <button type="submit">Yes, delete</button>
 </form>
-<a href="{% url 'dataitems:dataitem_detail' dataitem.pk %}">Cancel</a>
+<a href="{% url 'projects:project_detail' project.pk %}">Cancel</a>
 {% endblock %}
