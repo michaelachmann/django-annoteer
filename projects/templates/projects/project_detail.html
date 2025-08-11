@@ -40,8 +40,8 @@
             <tr>
               <th scope="row">Instruction</th>
               <td>
-                {% if project.instruction %}
-                  {{ project.instruction|markdownify|safe }}
+                {% if project.instructions %}
+                  {{ project.instructions|markdownify|safe }}
                 {% else %}
                   <span class="text-muted fst-italic">No instructions provided.</span>
                 {% endif %}
