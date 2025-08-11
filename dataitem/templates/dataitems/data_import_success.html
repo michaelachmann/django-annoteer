@@ -6,5 +6,8 @@
 <h2>Import abgeschlossen</h2>
 <p>{{ created }} neue Einträge erstellt.</p>
 <p>{{ updated }} Einträge aktualisiert.</p>
+<div>
+    <a href="{% url 'projects:project_detail' project.pk %}" class="btn btn-secondary">Zurück</a>
+</div>
 
 {% endblock %}

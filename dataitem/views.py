@@ -78,7 +78,8 @@ def dataitem_import(request, pk):
 
                 return render(request, 'dataitems/data_import_success.html', {
                    'created': count_created,
-                    'updated': count_updated
+                    'updated': count_updated,
+                    'project': project,
                 })
 
             except UnicodeDecodeError:
