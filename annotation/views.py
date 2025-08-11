@@ -72,6 +72,7 @@ def annotate_view(request, pk):
     dataitem = next_dataitem(project, request.user)
 
     dataitems = Dataitem.objects.filter(project=project)
+
     total_dataitems = dataitems.count()
 
     annotated_by_user = Annotation.objects.filter(
@@ -79,11 +80,9 @@ def annotate_view(request, pk):
         annotated_by=request.user
     ).count()
 
-    num_annotators = project.num_annotators
-
-    #annotated_by_user = Annotation.objects.filter(pk = project.pk, annotated_by=request.user).count()
-
-    #total_needed = total_dataitems * num_annotators
+    progress_percent = 0
+    if total_dataitems > 0:
+        progress_percent = (annotated_by_user / total_dataitems) * 100
 
     if not dataitem:
         return render(request, "annotation/annotation_all_done.html", {"project": project})
@@ -137,4 +136,5 @@ def annotate_view(request, pk):
         "project": project,
         "total_dataitems": total_dataitems,
         "annotated_by_user": annotated_by_user,
+        "progress_percent": progress_percent,
     })
