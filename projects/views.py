@@ -128,7 +128,7 @@ def project_export(request, pk):
             annotation = Annotation.objects.filter(dataitem= item, annotated_by=user).first()
 
             if annotation:
-                labels = AnnotationLabel.objects.filter(annotation=annotation).values_list("label__value", flat=True)
+                labels = AnnotationLabel.objects.filter(annotation=annotation).values_list("label__label", flat=True)
                 label_str = ";".join(labels) if project.label_type == "MU" else (labels[0] if labels else "")
             else:
                 label_str = ""
