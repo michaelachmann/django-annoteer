@@ -51,7 +51,7 @@ def dataitem_import(request, pk):
                 # Check column headers
                 if 'id' not in reader.fieldnames or 'text' not in reader.fieldnames:
                     form.add_error('file', 'CSV muss Spalten "id" und "text" enthalten.')
-                    return render(request, 'dataitems/dataitem_import.html', {'form': form})
+                    return render(request, 'dataitems/dataitem_import.html', {'form': form, 'project': project})
 
                 existing_ids = set(Dataitem.objects.filter(project=project).values_list('external_id', flat=True))
 
@@ -87,7 +87,7 @@ def dataitem_import(request, pk):
     else:
         form = CSVUploadForm()
 
-    return render(request, 'dataitems/dataitem_import.html', {'form': form})
+    return render(request, 'dataitems/dataitem_import.html', {'form': form, 'project': project})
 
 
 @login_required

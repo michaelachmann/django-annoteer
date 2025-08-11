@@ -6,6 +6,9 @@
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
   {{ form.as_p }}
-  <button type="submit">Save</button>
+  <div class="d-flex gap-2 mt-3">
+    <button type="submit">Save</button>
+    <a href="{% url 'projects:project_detail' project.pk %}" class="btn btn-primary">Zurück</a>
+</div>
 </form>
 {% endblock %}
