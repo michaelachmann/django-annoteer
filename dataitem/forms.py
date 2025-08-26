@@ -11,5 +11,13 @@ class DataitemForm(forms.Form):
 
 
 class CSVUploadForm(forms.Form):
-    file = forms.FileField()
+    file = forms.FileField(required=False)
 
+    def clean(self):
+        cleaned_data = super().clean()
+        file = cleaned_data.get('file')
+        pasted_data = self.data.get('pasted_data', '').strip()
+
+        if not file and not pasted_data:
+            raise forms.ValidationError("Bitte entweder eine Datei hochladen oder Daten einfügen.")
+        return cleaned_data

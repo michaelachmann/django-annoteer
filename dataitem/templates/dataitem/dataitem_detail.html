@@ -1,15 +1,15 @@
 {% extends "dataitem/index.html" %}
 
-{% block title %}{{ dataitem.name }} - Annotator{% endblock %}
+{% block title %}{{ dataitem.external_id }} - Annotator{% endblock %}
 
 {% block content %}
 <div class="card shadow-sm mb-4">
     <div class="card-body">
-        <h2 class="card-title">{{ dataitem.name }}</h2>
+        <h2 class="card-title">{{ dataitem.external_id }}</h2>
         <p class="text-muted">
             Uploaded by {{ dataitem.created_by }} on {{ dataitem.created_at|date:"Y-m-d H:i" }}
         </p>
-        <p class="card-text">{{ dataitems.description }}</p>
+        <p class="card-text">{{ dataitem.text }}</p>
 
         {% if dataitem.uploaded_file %}
             <a href="{{ dataitem.uploaded_file.url }}" class="btn btn-primary" download>
@@ -21,7 +21,6 @@
     </div>
 </div>
 
-<!-- This is where the annotation form will go -->
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}

@@ -37,26 +37,40 @@
         {% if project.label_type == "SI" %}
             {% for label in project.label_set.all %}
                 <label>
-                    <input type="radio" name="label" value="{{ label.pk }}">
-                    {{ label.value }}
+                    <input type="radio" name="label" value="{{ label.pk }}" id="label-{{ forloop.counter }}">
+                    ({{ forloop.counter }}) {{ label.value }}
                 </label><br>
             {% endfor %}
         {% elif project.label_type == "MU" %}
             {% for label in project.label_set.all %}
                 <label>
-                    <input type="checkbox" name="labels" value="{{ label.pk }}">
-                    {{ label.value }}
+                    <input type="checkbox" name="labels" value="{{ label.pk }}" id="label-{{ forloop.counter }}">
+                    ({{ forloop.counter }}) {{ label.value }}
                 </label><br>
             {% endfor %}
         {% endif %}
 
         <button type="submit">Save</button>
         <!--button type="button" onclick="window.history.back();">Back</button-->
-    <a href="{% url 'projects:project_detail' project.pk %}">
-    <button type="button">Back</button>
-    </a>
-
+        <a href="{% url 'projects:project_detail' project.pk %}">
+            <button type="button">Back</button>
+        </a>
     </form>
+    <script>
+        document.addEventListener("keydown", function(event) {
+            if (event.key >= "1" && event.key <= "9") {
+                let index = parseInt(event.key);
+                let input = document.getElementById("label-" + index);
+                if (input) {
+                    if (input.type === "radio") {
+                        input.checked = true;
+                    } else if (input.type === "checkbox") {
+                        input.checked = !input.checked;
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>

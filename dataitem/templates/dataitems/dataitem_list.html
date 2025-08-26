@@ -6,9 +6,11 @@
 <ul>
   {% for dataitem in dataitems %}
     <li>
-      <a href="{% url 'dataitems:dataitem_detail' dataitem.pk %}">{{ dataitem.name }}</a>
+        <a href="{% url 'dataitems:dataitem_detail' dataitem.pk %}">
+            {{ dataitem.external_id }} – {{ dataitem.text|truncatechars:80 }}
+        </a>
     </li>
   {% endfor %}
 </ul>
-<a href="{% url 'dataitems:dataitem_import' %}">+ New Dataitem</a>
+<a href="{% url 'dataitems:dataitem_import' pk=project.pk %}">+ New Dataitem</a>
 {% endblock %}

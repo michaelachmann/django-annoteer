@@ -11,8 +11,11 @@ from projects.models import Project
 
 def dataitem_list(request):
     dataitems = Dataitem.objects.all()
-    return render(request, "dataitems/dataitem_list.html", {"dataitems": dataitems})
-
+    project = Project.objects.first()
+    return render(request, "dataitems/dataitem_list.html", {
+        "dataitems": dataitems,
+        "project": project
+    })
 
 def dataitem_detail(request, pk):
     dataitem = get_object_or_404(Dataitem, pk=pk)
@@ -42,48 +45,78 @@ def dataitem_import(request, pk):
 
     if request.method == 'POST':
         form = CSVUploadForm(request.POST, request.FILES)
-        if form.is_valid():
+        pasted_data = request.POST.get('pasted_data', '').strip()
+        print("Eingefügter Text:", pasted_data)
+
+        rows = []
+
+        #CSV-Datei verarbeiten, falls vorhanden
+        if form.is_valid() and form.cleaned_data.get('file'):
             file = form.cleaned_data['file']
             try:
                 decoded_file = io.TextIOWrapper(file, encoding='utf-8')
                 reader = csv.DictReader(decoded_file)
 
-                # Check column headers
                 if 'id' not in reader.fieldnames or 'text' not in reader.fieldnames:
                     form.add_error('file', 'CSV muss Spalten "id" und "text" enthalten.')
                     return render(request, 'dataitems/dataitem_import.html', {'form': form, 'project': project})
-
-                existing_ids = set(Dataitem.objects.filter(project=project).values_list('external_id', flat=True))
-
-                items_to_create = []
-                count_created = 0
-                count_updated = 0
-
                 for row in reader:
-                    external_id = row['id'].strip()
-                    text = row['text'].strip()
-                    if external_id in existing_ids:
-                        Dataitem.objects.filter(external_id=external_id, project=project).update(text=text)
-                        count_updated += 1
-                    else:
-                        items_to_create.append(Dataitem(
-                            external_id=external_id,
-                            text=text,
-                            created_by=request.user,
-                            project=project
-                        ))
-                        count_created += 1
-
-                Dataitem.objects.bulk_create(items_to_create, ignore_conflicts=True)
-
-                return render(request, 'dataitems/data_import_success.html', {
-                   'created': count_created,
-                    'updated': count_updated,
-                    'project': project,
-                })
-
+                    rows.append({'id': row['id'].strip(), 'text': row['text'].strip()})
             except UnicodeDecodeError:
-                form.add_error('file', 'Datei konnte nicht als UTF-8 gelesen werden.')
+                form.add_error("file", "Datei konnte nicht als UTF-8 gelesen werden")
+                return render(request, 'dataitems/dataitem_import.html', {'form': form, 'project': project})
+
+
+        #Copy-Paste-Data verarbeiten, falls vorhanden
+        elif pasted_data:
+            lines = pasted_data.splitlines()
+            for line in lines:
+                if '\t' in line:
+                    parts = line.split('\t')
+                elif ',' in line:
+                    parts = line.split(',', 1)
+                else:
+                    parts = []
+
+                if len(parts) >= 2:
+                    rows.append({'id': parts[0].strip(), 'text': parts[1].strip()})
+                else:
+                    messages.warning(request, f"Zeile übersprungen (ungültiges Format): {line}")
+
+        #Daten speichern
+        existing_ids = set(Dataitem.objects.filter(project=project).values_list('external_id', flat=True))
+        items_to_create = []
+        count_created = 0
+        count_updated = 0
+
+        for row in rows:
+            external_id = row['id'].strip()
+            text = row['text'].strip()
+            if external_id in existing_ids:
+                Dataitem.objects.filter(external_id=external_id, project=project).update(text=text)
+                count_updated += 1
+            else:
+                items_to_create.append(Dataitem(
+                    external_id=external_id,
+                    text=text,
+                    created_by=request.user,
+                    project=project
+                ))
+                count_created += 1
+
+
+        print("Empfangene Zeilen:", rows)
+        print("Existierende IDs:", existing_ids)
+        print("Zu erstellende Items:", items_to_create)
+
+        Dataitem.objects.bulk_create(items_to_create, ignore_conflicts=True)
+
+        return render(request, 'dataitems/data_import_success.html', {
+            'created': count_created,
+            'updated': count_updated,
+            'project': project,
+        })
+
     else:
         form = CSVUploadForm()
 
@@ -103,9 +136,16 @@ def dataitem_update(request, pk):
 @login_required
 def dataitem_delete(request, pk):
     dataitem = get_object_or_404(Dataitem, pk=pk)
+    project = getattr(dataitem, 'project', None)
+
     if request.method == "POST":
         dataitem.delete()
-        return redirect("dataitems:dataitem_list")
-    return render(request, "dataitems/dataitem_confirm_delete.html", {"dataitem": dataitem, 'project': dataitem.project})
+        if project:
+            return redirect("projects:project_detail", pk=project.pk)
+        else:
+            return redirect("dataitems:dataitem_list")
 
-
+    return render(request, "dataitems/dataitem_confirm_delete.html", {
+        "dataitem": dataitem,
+        "project": project
+    })
