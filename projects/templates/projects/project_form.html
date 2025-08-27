@@ -81,12 +81,13 @@
 
             <!-- Buttons -->
             <div class="d-flex justify-content-end">
-              <a href="{% url 'projects:project_list' %}" class="btn btn-secondary me-2">
+              <a href="{% url 'projects:project_detail' form.instance.pk %}" class="btn btn-secondary me-2">
                 Cancel
               </a>
-              <button type="submit" class="btn btn-primary">
-                {% if form.instance.pk %}Save Changes{% else %}Create Project{% endif %}
-              </button>
+                {% if form.instance.pk %}
+                    <a href="{% url 'projects:project_detail' form.instance.pk %}" class="btn btn-secondary me-2">Save Changes{% else %}Create Project{% endif %} </a>
+
+
             </div>
           {% if form.instance.pk %}
             <div class="d-flex justify-content-end">
