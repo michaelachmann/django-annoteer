@@ -58,12 +58,12 @@ def dataitem_import(request, pk):
                 reader = csv.DictReader(decoded_file)
 
                 if 'id' not in reader.fieldnames or 'text' not in reader.fieldnames:
-                    form.add_error('file', 'CSV muss Spalten "id" und "text" enthalten.')
+                    form.add_error('file', 'CSV must include columns "id" and "text".')
                     return render(request, 'dataitems/dataitem_import.html', {'form': form, 'project': project})
                 for row in reader:
                     rows.append({'id': row['id'].strip(), 'text': row['text'].strip()})
             except UnicodeDecodeError:
-                form.add_error("file", "Datei konnte nicht als UTF-8 gelesen werden")
+                form.add_error("file", "File could not be imported as UTF-8.")
                 return render(request, 'dataitems/dataitem_import.html', {'form': form, 'project': project})
 
 

@@ -3,11 +3,11 @@
 {% block title %}Anoteer | Datatitem Created {% endblock %}
 
 {% block content %}
-<h2>Import abgeschlossen</h2>
-<p>{{ created }} neue Einträge erstellt.</p>
-<p>{{ updated }} Einträge aktualisiert.</p>
+<h2>Import completed</h2>
+<p>{{ created }} new entries created.</p>
+<p>{{ updated }} entries updated.</p>
 <div>
-    <a href="{% url 'projects:project_detail' project.pk %}" class="btn btn-secondary">Zurück</a>
+    <a href="{% url 'projects:project_detail' project.pk %}" class="btn btn-secondary">Back</a>
 </div>
 
 {% endblock %}

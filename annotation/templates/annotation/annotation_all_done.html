@@ -1,3 +1,6 @@
-<h2>Alle Texte wurden bereits vollständig annotiert.</h2>
-<p>Projekt: {{ project.name }}</p>
+{% extends 'base.html' %}
+
+<h2>All annotations of texts have been completed.</h2>
+<p>Project: {{ project.name }}</p>
+
 <a href="{% url 'projects:project_detail' project.pk %}">Back to the Project</a>
