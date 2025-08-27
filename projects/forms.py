@@ -41,11 +41,11 @@ class LabelForm(forms.ModelForm):
         widgets = {
             "label": forms.TextInput(attrs={
                 "class": "form-control",
-                "placeholder": "z. B. Positiv"
+                "placeholder": "e.g. positive"
             }),
             "value": forms.TextInput(attrs={
                 "class": "form-control",
-                "placeholder": "z. B. POS"
+                "placeholder": "e.g. POS"
             }),
             "id": forms.HiddenInput(),
         }

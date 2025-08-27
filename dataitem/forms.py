@@ -19,5 +19,5 @@ class CSVUploadForm(forms.Form):
         pasted_data = self.data.get('pasted_data', '').strip()
 
         if not file and not pasted_data:
-            raise forms.ValidationError("Bitte entweder eine Datei hochladen oder Daten einfügen.")
+            raise forms.ValidationError("Please upload a file or paste data.")
         return cleaned_data

@@ -91,11 +91,9 @@
           {% if form.instance.pk %}
             <div class="d-flex justify-content-end">
                 <a href="{% url "projects:label_manage" form.instance.pk %}" class="btn btn-secondary me-2">
-                    Weiter zur Labelverwaltung
+                    Manage labels
                 </a>
-                <button type="submit" class="btn btn-primary">
-                    Add Label
-                </button>
+
             </div>
           {% endif %}
           </form>
