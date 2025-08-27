@@ -3,7 +3,7 @@
 
 {% block content %}
   <div class="container">
-    <h1 class="mb-4">Labels verwalten für: <strong>{{ project.name }}</strong></h1>
+    <h1 class="mb-4">Manage labels for: <strong>{{ project.name }}</strong></h1>
 
     <form method="post" id="label-formset">
       {% csrf_token %}
@@ -21,18 +21,18 @@
             </div>
             {{ form.DELETE.as_hidden }}
               {{ form.id }}
-            <button type="button" class="btn-close position-absolute top-0 end-0 m-2 remove-form" aria-label="Entfernen"></button>
+            <button type="button" class="btn-close position-absolute top-0 end-0 m-2 remove-form" aria-label="Remove"></button>
           </div>
         {% endfor %}
       </div>
 
       <button type="button" class="btn btn-outline-secondary mb-3" id="add-form">
-        + Label hinzufügen
+        + Add label
       </button>
 
       <div>
-        <button type="submit" class="btn btn-primary">Speichern</button>
-        <a href="{% url 'projects:project_detail' project.pk %}" class="btn btn-secondary">Zurück</a>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a href="{% url 'projects:project_detail' project.pk %}" class="btn btn-secondary">Back</a>
       </div>
     </form>
   </div>

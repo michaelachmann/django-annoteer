@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 
+{% block content %}
+
 <h2>All annotations of texts have been completed.</h2>
 <p>Project: {{ project.name }}</p>
 
 <a href="{% url 'projects:project_detail' project.pk %}">Back to the Project</a>
+
+{% endblock %}
