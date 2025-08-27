@@ -8,18 +8,18 @@
   {% csrf_token %}
   {{ form.as_p }}
 
-  <label for="pasted_data">Oder Daten aus Excel einfügen:</label><br>
-  <small>Format: <strong>id [Tab] text</strong></small><br>
+  <label for="pasted_data">Or import data from Excel:</label><br>
+  <small>Format: <strong>id [separator] text</strong></small><br>
   <pre style="background:#f8f8f8; padding:8px; border:1px solid #ccc;">
-    1    Beispieltext
-    2    Noch ein Text
+    1    Example text
+    2    Another text
   </pre>
   <textarea name="pasted_data" rows="10" cols="80"
-              placeholder="Daten einfügen"></textarea><br><br>
+              placeholder="Paste data"></textarea><br><br>
 
   <!--div class="d-flex gap-2 mt-3"-->
     <button type="submit">Save</button>
-    <a href="{% url 'projects:project_detail' project.pk %}" class="btn btn-primary">Zurück</a>
+    <a href="{% url 'projects:project_detail' project.pk %}" class="btn btn-primary">Back</a>
 </div>
 </form>
 {% endblock %}

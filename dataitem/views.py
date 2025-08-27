@@ -46,7 +46,7 @@ def dataitem_import(request, pk):
     if request.method == 'POST':
         form = CSVUploadForm(request.POST, request.FILES)
         pasted_data = request.POST.get('pasted_data', '').strip()
-        print("Eingefügter Text:", pasted_data)
+        print("Pasted text:", pasted_data)
 
         rows = []
 
@@ -75,13 +75,15 @@ def dataitem_import(request, pk):
                     parts = line.split('\t')
                 elif ',' in line:
                     parts = line.split(',', 1)
+                elif ';' in line:
+                    parts = line.split(';', 1)
                 else:
                     parts = []
 
                 if len(parts) >= 2:
                     rows.append({'id': parts[0].strip(), 'text': parts[1].strip()})
                 else:
-                    messages.warning(request, f"Zeile übersprungen (ungültiges Format): {line}")
+                    messages.warning(request, f"Skipped row (non compatible format): {line}")
 
         #Daten speichern
         existing_ids = set(Dataitem.objects.filter(project=project).values_list('external_id', flat=True))
@@ -105,9 +107,9 @@ def dataitem_import(request, pk):
                 count_created += 1
 
 
-        print("Empfangene Zeilen:", rows)
-        print("Existierende IDs:", existing_ids)
-        print("Zu erstellende Items:", items_to_create)
+        print("Received rows:", rows)
+        print("Existing IDs:", existing_ids)
+        print("Items to be created:", items_to_create)
 
         Dataitem.objects.bulk_create(items_to_create, ignore_conflicts=True)
 
