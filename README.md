@@ -21,4 +21,4 @@ So that all of the contributors of a project are informed about the procedure, y
 
 ## Authors
 
-Vozdecka, Eliska; Heinz, Emily; Babl, Sophia; Holler, Teresa
+Vozdecka, Eliska (2595209); Heinz, Emily (2570310); Babl, Sophia (2562861); Holler, Teresa (2221641)
